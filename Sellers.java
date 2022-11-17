@@ -139,6 +139,7 @@ public class Sellers extends User {
                         }
                     } while (p == -1);
                     createProduct(n, super.getEmail(), desc, q, p);
+                    update();
                     break;
                 case 2:
                     boolean sent = false;
@@ -206,6 +207,7 @@ public class Sellers extends User {
                             input.nextLine();
                         }
                     } while (!sent);
+                    update();
                     break;
                 case 3:
                     int num = -2;
@@ -229,6 +231,7 @@ public class Sellers extends User {
                             input.nextLine();
                         }
                     } while (num == -2);
+                    update();
                     break;
                 case 4:
                     if (productList != null && productList.size() != 0) {
@@ -260,6 +263,7 @@ public class Sellers extends User {
                             System.out.println("Please enter either i or e.");
                         }
                     } while (sent);
+                    update();
                     break;
                 case 8:
                     super.deleteAccount();
@@ -272,6 +276,7 @@ public class Sellers extends User {
                     // keep for exit statement
                     store.setProducts(productList);
                     store.printToFile(new File(super.getEmail() + ".txt"));
+                    Market.updateListings();
                     break;
                 default:
                     System.out.println("Enter Valid Number");
@@ -602,4 +607,11 @@ public class Sellers extends User {
             System.out.println("Cannot write to that file, sorry!");
         }
     }
+
+    public void update() {
+        store.setProducts(productList);
+        store.printToFile(new File(super.getEmail() + ".txt"));
+        Market.updateListings();
+    }
+
 }
