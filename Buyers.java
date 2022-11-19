@@ -182,7 +182,7 @@ public class Buyers extends User {
             } while (true);
             switch (choice) {
                 case 1:
-                    allProducts = refresh();
+
                     if (allProducts.size() == 0) {
                         System.out.println("No products are currently listed.");
                         break;
@@ -216,7 +216,7 @@ public class Buyers extends User {
                     }
                     break;
                 case 2:
-                    allProducts = refresh();
+
                     if (allProducts.size() == 0) {
                         System.out.println("No products are currently listed.");
                         break;
@@ -241,7 +241,7 @@ public class Buyers extends User {
                     }
                     break;
                 case 3:
-                    allProducts = refresh();
+
                     if (allProducts.size() == 0) {
                         System.out.println("No products are currently listed.");
                         break;
@@ -293,7 +293,7 @@ public class Buyers extends User {
 
                     break;
                 case 4:
-                    allProducts = refresh();
+
                     if (allProducts.size() == 0) {
                         System.out.println("No products are currently listed.");
                         break;
@@ -552,10 +552,6 @@ public class Buyers extends User {
         saveCart();
         Market.toFile();
         Market.updateListings();
-    }
-
-    public ArrayList<Product> refresh() {
-        return getAllProducts(Market.fromFile(new File("Listings.txt")));
     }
 
 }
