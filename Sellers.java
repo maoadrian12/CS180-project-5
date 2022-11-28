@@ -5,6 +5,7 @@ import java.io.*;
 import java.util.Scanner;
 import java.util.HashMap;
 import java.util.*;
+
 /**
  * @author Mao, Chakrabarty, Lee, Johnson, Muthyala
  * @version 11.13.22
@@ -15,6 +16,7 @@ public class Sellers extends User {
 
     /**
      * Sets up a seller given some info.
+     *
      * @param email
      * @param password
      */
@@ -27,6 +29,7 @@ public class Sellers extends User {
 
     /**
      * Sets up a seller given a user
+     *
      * @param user The user that is a seller
      */
     public Sellers(User user) {
@@ -37,14 +40,16 @@ public class Sellers extends User {
 
     /**
      * @param email their username
-     * Sets up the text file with all the seller's info
+     *              Sets up the text file with all the seller's info
      */
     private void setupInfo(String email) {
-        FileReader fr;
-        BufferedReader br;
-        File f = new File(email + ".txt");
+        //File f = new File(email + ".txt");
+        ArrayList<String> products = MarketServer.getList(email + ".txt");
+        for (String s : products) {
+            productList.add(new Product(s));
+        }
         store = new Store(email);
-        if (f.exists()) {
+        /*if (f.exists()) {
             try {
                 fr = new FileReader(f);
                 br = new BufferedReader(fr);
@@ -58,7 +63,7 @@ public class Sellers extends User {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 
     /**
@@ -151,7 +156,7 @@ public class Sellers extends User {
                             if (answer == -1) {
                                 sent = true;
                             } else if (answer > productList.size() - 1) {
-                                System.out.println("Please enter a number between 0 and " + (productList.size() -1) );
+                                System.out.println("Please enter a number between 0 and " + (productList.size() - 1));
                             } else {
                                 String name = "";
                                 do {
@@ -287,11 +292,12 @@ public class Sellers extends User {
 
     /**
      * This method creates a product given some info.
-     * @param name The name of the product
-     * @param seller The seller of the product
-     * @param desc The description of the product
+     *
+     * @param name     The name of the product
+     * @param seller   The seller of the product
+     * @param desc     The description of the product
      * @param quantity The quantity available for the product
-     * @param price The price of the product
+     * @param price    The price of the product
      */
     public void createProduct(String name, String seller, String desc, int quantity, double price) {
         //creates a new product using individual product attributes and adds it to the seller's list of products
@@ -309,6 +315,7 @@ public class Sellers extends User {
 
     /**
      * This method creates a new product using a String formatted with all the product's information.
+     *
      * @param info The string that creates the product.
      */
     public void createProduct(String info) {
@@ -327,11 +334,12 @@ public class Sellers extends User {
 
     /**
      * This method edits a product to produce a different product.
-     * @param product The product to edit
-     * @param newName The new name of the product
-     * @param newDesc The new description of the product.
+     *
+     * @param product     The product to edit
+     * @param newName     The new name of the product
+     * @param newDesc     The new description of the product.
      * @param newQuantity The new quantity of the product
-     * @param newPrice The new price of the product
+     * @param newPrice    The new price of the product
      */
     public void editProduct(Product product, String newName, String newDesc, int newQuantity, double newPrice) {
         //method to change the specified product's attributes in the seller's product list
@@ -353,6 +361,7 @@ public class Sellers extends User {
 
     /**
      * This method deletes a given product from the seller's productList.
+     *
      * @param product The product to be deleted.
      */
     public void deleteProduct(Product product) {
@@ -369,41 +378,27 @@ public class Sellers extends User {
      * This method allows the seller to view what is in each buyer's cart.
      */
     public void viewCarts() {
-        File f = new File("UserAccounts.txt");
+        ArrayList<String> accounts = MarketServer.getList("UserAccounts.txt");
         int numItems = 0;
-        try {
-            FileReader fr = new FileReader(f);
-            BufferedReader br = new BufferedReader(fr);
-            while (true) {
-                String s = br.readLine();
-                if (s == null) {
-                    break;
-                }
-                String name = s.substring(0, s.indexOf(','));
-                s = s.substring(s.indexOf(',') + 1);
-                String status = s.substring(s.indexOf(',') + 1);
-                if (status.equals("buyer")) {
-                    File file = new File(name + "Cart.txt");
-                    if (file.exists() && file.length() != 0) {
-                        System.out.println("Customer " + name + " has: ");
-                        FileReader flr = new FileReader(file);
-                        BufferedReader bfr = new BufferedReader(flr);
-                        while (true) {
-                            String str = bfr.readLine();
-                            if (str == null) {
-                                break;
-                            }
-                            Product p  = new Product(str);
-                            numItems++;
-                            System.out.printf("\t%s, sold by %s, priced at %.2f\n",
-                                    p.getName(), p.getSeller(), p.getPrice());
-                        }
+        for (String s : accounts) {
+            String name = s.substring(0, s.indexOf(','));
+            s = s.substring(s.indexOf(',') + 1);
+            String status = s.substring(s.indexOf(',') + 1);
+            if (status.equals("buyer")) {
+                ArrayList<String> carts = MarketServer.getList(name + "Cart.txt");
+                if (carts.size() > 0) {
+                    System.out.println("Customer " + name + " has: ");
+                    for (String str : carts) {
+                        Product p = new Product(str);
+                        numItems++;
+                        System.out.printf("\t%s, sold by %s, priced at %.2f\n",
+                                p.getName(), p.getSeller(), p.getPrice());
                     }
                 }
             }
-        } catch (IOException e) {
-            System.out.println("Nothing in carts!");
         }
+
+
         if (numItems == 0) {
             System.out.println("Nothing in carts!");
         }
@@ -413,6 +408,7 @@ public class Sellers extends User {
      * This method outputs the seller's statistics.
      */
     public void viewStatistics() {
+        //TODO
         File f = new File("AllPurchases.txt");
         File f2 = new File("UserAccounts.txt");
         ArrayList<String> buyers = new ArrayList<>();
@@ -501,8 +497,7 @@ public class Sellers extends User {
             List<Map.Entry<String, Integer>> list = new LinkedList<Map.Entry<String, Integer>>(map.entrySet());
             Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
                 public int compare(Map.Entry<String, Integer> o1,
-                                   Map.Entry<String, Integer> o2)
-                {
+                                   Map.Entry<String, Integer> o2) {
                     return (o1.getValue()).compareTo(o2.getValue());
                 }
             });
@@ -513,8 +508,7 @@ public class Sellers extends User {
             List<Map.Entry<String, Integer>> list2 = new LinkedList<Map.Entry<String, Integer>>(map2.entrySet());
             Collections.sort(list2, new Comparator<Map.Entry<String, Integer>>() {
                 public int compare(Map.Entry<String, Integer> o1,
-                                   Map.Entry<String, Integer> o2)
-                {
+                                   Map.Entry<String, Integer> o2) {
                     return (o1.getValue()).compareTo(o2.getValue());
                 }
             });
@@ -540,6 +534,7 @@ public class Sellers extends User {
     /**
      * This method adds a product to the given seller's list of products.
      * If the product already exists, the quantity for that product is increased instead.
+     *
      * @param p The product to be added.
      */
     private void addProduct(Product p) {
@@ -557,15 +552,26 @@ public class Sellers extends User {
 
     /**
      * This method imports the seller's products from a given file, given that it is the correct format.
+     *
      * @param input The scanner that takes user input.
      */
     public void im(Scanner input) {
         System.out.println("What path do you want to import from?");
         String answer = input.nextLine();
-        File f = new File(answer);
-        if (!f.exists() || f.isDirectory() || f.length() == 0) {
+        ArrayList<String> products = MarketServer.getList(answer);
+        //File f = new File(answer);
+        if (products.isEmpty()) {
             System.out.println("Error importing from file, aborting...");
         } else {
+            for (String s : products) {
+                Product p = new Product(s);
+                if (p.getSeller().equals(super.getEmail())) {
+                    addProduct(p);
+                } else {
+                    System.out.println("Please have your own products.");
+                }
+            }
+            /*
             try {
                 FileReader fr = new FileReader(f);
                 BufferedReader br = new BufferedReader(fr);
@@ -586,7 +592,7 @@ public class Sellers extends User {
                 System.out.println("Error importing from file, aborting...");
             } catch (Exception e) {
                 System.out.println("Please path a .csv file with correct formatting for products.");
-            }
+            }*/
         }
     }
 
@@ -596,6 +602,16 @@ public class Sellers extends User {
     public void export() {
         System.out.println("Exporting to " + super.getEmail() + ".csv...");
         File f = new File(super.getEmail() + ".csv");
+        ArrayList<String> products = new ArrayList<>();
+        for (Product p : productList) {
+            products.add(p.toString());
+        }
+        if (MarketServer.writeToFile(products, f)) {
+            System.out.println("Exported");
+        } else {
+            System.out.println("Cannot write to that file, sorry!");
+        }
+        /*
         try {
             FileWriter fw = new FileWriter(f);
             for (Product p : productList) {
@@ -604,8 +620,9 @@ public class Sellers extends User {
             fw.close();
             System.out.println("Exported!");
         } catch (IOException e) {
+
             System.out.println("Cannot write to that file, sorry!");
-        }
+        }*/
     }
 
     public void update() {

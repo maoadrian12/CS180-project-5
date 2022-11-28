@@ -1,5 +1,5 @@
 import java.awt.*;
-import java.lang.reflect.Array;
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
@@ -8,6 +8,7 @@ import java.io.*;
 import java.util.*;
 
 import static java.util.Collections.*;
+
 /**
  * @author Mao, Chakrabarty, Lee, Johnson, Muthyala
  * @version 11.13.22
@@ -17,53 +18,46 @@ public class Buyers extends User {
 
     /**
      * A method that creates a buyer given their information
-     * @param email The buyer's email
+     *
+     * @param email    The buyer's email
      * @param password The buyer's password
      */
     public Buyers(String email, String password) {
         super(email, password);
         setBuyOrSell("buyer");
-        setupFile();
+        //setupFile();
     }
 
     /**
      * This method creatse a buyer given a user
+     *
      * @param user The user that is a buyer
      */
     public Buyers(User user) {
         super(user.getEmail(), user.getPassword());
         setBuyOrSell("buyer");
-        setupFile();
+        //setupFile();
     }
+
 
     /**
      * This method sets up the file that belongs to the buyer, which contains their purchase history
+     * Not certain if we need this method so I commented it out
      */
-    public void setupFile() {
+    /*public void setupFile() {
+        //TODO
         File f = new File(super.getEmail() + ".txt");
-    }
+    }*/
 
     /**
      * This method sets up the cart of the buyer. If they already have a cart,
-     *then it is saved in their cart, and it initialtes it
+     * then it is saved in their cart, and it initialtes it
      * from that file. Otherwise, it creates a new file for their cart.
      */
     public void setupCart() {
-        File f = new File(super.getEmail() + "Cart.txt");
-        if (f.exists() && f.length() != 0) {
-            try {
-                FileReader fr = new FileReader(f);
-                BufferedReader br = new BufferedReader(fr);
-                while (true) {
-                    String s = br.readLine();
-                    if (s == null) {
-                        break;
-                    }
-                    shoppingCart.add(new Product(s));
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        ArrayList<String> cart = MarketServer.getList(super.getEmail() + "Cart.txt");
+        for (String s : cart) {
+            shoppingCart.add(new Product(s));
         }
     }
 
@@ -72,24 +66,16 @@ public class Buyers extends User {
      */
     public void saveCart() {
         File f = new File(super.getEmail() + "Cart.txt");
-        try {
-            FileWriter fw = null;
-            if (!f.exists() || f.length() == 0) {
-                fw = new FileWriter(f);
-            } else {
-                fw = new FileWriter(f, false);
-            }
-            for (Product p : shoppingCart) {
-                fw.write(p.toString() + "\n");
-            }
-            fw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        ArrayList<String> stringCart = new ArrayList<>();
+        for (Product p : shoppingCart) {
+            stringCart.add(p.toString());
         }
+        MarketServer.writeToFile(stringCart, f);
     }
 
     /**
      * This method adds a product to their cart
+     *
      * @param p The product to add to their cart
      */
     private void addToCart(Product p) {
@@ -105,26 +91,34 @@ public class Buyers extends User {
      * This method clears the buyer's cart
      */
     private void clearCart() {
+        ArrayList<String> blank = new ArrayList<>();
+        blank.add("");
         File f = new File(super.getEmail() + "Cart.txt");
-        try {
-            FileWriter fw = new FileWriter(f);
-            fw.write("");
-            fw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        MarketServer.writeToFile(blank, f);
     }
 
     /**
      * This method adds the buyer's cart to their given purchase history.
      * This method is used when a buyer purchases something.
+     *
      * @param cart The seller's cart.
      */
     private void addToFile(ArrayList<Product> cart) {
         clearCart();
         File f = new File(super.getEmail() + ".txt");
-        FileWriter fw;
+        ArrayList<String> newPurchases = new ArrayList<>();
+        for (Product p : cart) {
+            newPurchases.add(p.getName() + "," + p.getSeller() + "\n");
+        }
+        ArrayList<String> newAllPurchases = new ArrayList<>();
+        for (Product p : cart) {
+            newAllPurchases.add(p.getName() + "," + p.getSeller() + "," + super.getEmail() + "," + p.getPrice() + "\n");
+        }
         File file = new File("AllPurchases.txt");
+        MarketServer.writeToFile(newPurchases, f);
+        MarketServer.writeToFile(newAllPurchases, file);
+        /*
+        FileWriter fw;
         try {
             if (!f.exists()) {
                 fw = new FileWriter(f);
@@ -141,15 +135,16 @@ public class Buyers extends User {
             flw.close();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
 
     /**
      * This method prints out the choices the buyer can make when starting the program.
-     * @param buyer The buyer
+     *
+     * @param buyer  The buyer
      * @param market The arraylist of stores that is the market
-     * @param input The scanner that is used for user input
+     * @param input  The scanner that is used for user input
      */
     public void choices(Buyers buyer, ArrayList<Store> market, Scanner input) {
         setupCart();
@@ -251,6 +246,7 @@ public class Buyers extends User {
                         try {
                             System.out.println("Sort on quantity or price? (1/2)");
                             sortChoice = scanner.nextInt();
+                            scanner.nextLine();
                         } catch (InputMismatchException e) {
                             System.out.println("Please enter either 1 or 2.");
                             scanner.nextLine();
@@ -335,23 +331,14 @@ public class Buyers extends User {
                 case 5:
                     System.out.println("Purchase history:");
                     File f = new File(super.getEmail() + ".txt");
-                    if (!f.exists() || f.length() == 0) {
+                    ArrayList<String> history = MarketServer.getList(super.getEmail() + ".txt");
+                    if (history.size() == 0) {
                         System.out.println("No purchased items.");
                     } else {
-                        try {
-                            FileReader fr = new FileReader(f);
-                            BufferedReader br = new BufferedReader(fr);
-                            while (true) {
-                                String s = br.readLine();
-                                if (s == null) {
-                                    break;
-                                }
-                                String name = s.substring(0, s.indexOf(','));
-                                String seller = s.substring(s.indexOf(',') + 1);
-                                System.out.println("\t" + name + " sold by " + seller);
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                        for (String s : history) {
+                            String name = s.substring(0, s.indexOf(','));
+                            String seller = s.substring(s.indexOf(',') + 1);
+                            System.out.println("\t" + name + " sold by " + seller);
                         }
                     }
                     break;
@@ -448,6 +435,7 @@ public class Buyers extends User {
 
     /**
      * This method returns the arraylist of the products
+     *
      * @param market The market
      * @return The market
      */
@@ -466,85 +454,70 @@ public class Buyers extends User {
 
     /**
      * This method prints out the statistics for the buyer.
+     *
      * @param input The scanner used for user input
      */
     public void statistics(Scanner input) {
+        //TODO
         File f = new File("AllPurchases.txt");
-        FileReader fr;
-        BufferedReader br;
+        ArrayList<String> purchases = MarketServer.getList("AllPurchases.txt");
+        //FileReader fr;
+        //BufferedReader br;
         ArrayList<String> sellers = new ArrayList<>();
         ArrayList<String> allPurchases = new ArrayList<>();
         ArrayList<String> yourPurchases = new ArrayList<>();
-        try {
-            fr = new FileReader(f);
-            br = new BufferedReader(fr);
-            while (true) {
-                String s = br.readLine();
-                if (s == null) {
-                    break;
-                }
-                s = s.substring(s.indexOf(',') + 1);
-                String sellerName = s.substring(0, s.indexOf(','));
-                if (!sellers.contains(sellerName)) {
-                    sellers.add(sellerName);
+        for (String s : purchases) {
+            s = s.substring(s.indexOf(',') + 1);
+            String sellerName = s.substring(0, s.indexOf(','));
+            if (!sellers.contains(sellerName)) {
+                sellers.add(sellerName);
+            }
+        }
+        for (String s : sellers) {
+            int count = 0;
+            for (String str : purchases) {
+                str = str.substring(str.indexOf(',') + 1);
+                String sellerName = str.substring(0, str.indexOf(','));
+                if (sellerName.equalsIgnoreCase(s)) {
+                    count++;
                 }
             }
-            for (String s : sellers) {
-                int count = 0;
-                fr = new FileReader(f);
-                br = new BufferedReader(fr);
-                while (true) {
-                    String str = br.readLine();
-                    if (str == null)
-                        break;
-                    str = str.substring(str.indexOf(',') + 1);
-                    String sellerName = str.substring(0, str.indexOf(','));
-                    if (sellerName.equalsIgnoreCase(s)) {
-                        count++;
-                    }
-                }
-                allPurchases.add(count + "," + s);
-                System.out.printf("Seller %s has sold %d products\n", s, count);
-            }
-            for (String s : sellers) {
-                int count = 0;
-                fr = new FileReader(f);
-                br = new BufferedReader(fr);
-                while (true) {
-                    String str = br.readLine();
-                    if (str == null)
-                        break;
-                    str = str.substring(str.indexOf(',') + 1);
-                    String sellerName = str.substring(0, str.indexOf(','));
-                    str = str.substring(str.indexOf(',') + 1);
-                    String buyerName = str.substring(0, str.indexOf(','));
-                    if (sellerName.equalsIgnoreCase(s) && buyerName.equals(super.getEmail())) {
-                        count++;
-                    }
 
-                }
-                yourPurchases.add(count + "," + s);
-                System.out.printf("You have bought %d products from %s\n", count, s);
-            }
-            System.out.println("Would you like to sort?(y/n)");
-            String answer = input.nextLine();
-            if (answer.equalsIgnoreCase("y")) {
-                Collections.sort(allPurchases, reverseOrder());
-                Collections.sort(yourPurchases, reverseOrder());
-                for (String str : allPurchases) {
-                    String numBought = str.substring(0, str.indexOf(','));
-                    String seller = str.substring(str.indexOf(',') + 1);
-                    System.out.printf("Seller %s has sold %s products\n", seller, numBought);
-                }
-                System.out.println("-----------------------");
-                for (String string : yourPurchases) {
-                    String numBought = string.substring(0, string.indexOf(','));
-                    String seller = string.substring(string.indexOf(',') + 1);
-                    System.out.printf("You have bought %s products from %s\n", numBought, seller);
+            allPurchases.add(count + "," + s);
+            System.out.printf("Seller %s has sold %d products\n", s, count);
+
+        }
+        for (String s : sellers) {
+            int count = 0;
+            for (String str : purchases) {
+                str = str.substring(str.indexOf(',') + 1);
+                String sellerName = str.substring(0, str.indexOf(','));
+                str = str.substring(str.indexOf(',') + 1);
+                String buyerName = str.substring(0, str.indexOf(','));
+                if (sellerName.equalsIgnoreCase(s) && buyerName.equals(super.getEmail())) {
+                    count++;
                 }
             }
-        } catch (IOException e) {
-            System.out.println("No purchases have been made so far.");
+            yourPurchases.add(count + "," + s);
+            System.out.printf("You have bought %d products from %s\n", count, s);
+        }
+
+        System.out.println("Would you like to sort?(y/n)");
+        String answer = input.nextLine();
+        if (answer.equalsIgnoreCase("y")) {
+            Collections.sort(allPurchases, reverseOrder());
+            Collections.sort(yourPurchases, reverseOrder());
+            for (String str : allPurchases) {
+                String numBought = str.substring(0, str.indexOf(','));
+                String seller = str.substring(str.indexOf(',') + 1);
+                System.out.printf("Seller %s has sold %s products\n", seller, numBought);
+            }
+            System.out.println("-----------------------");
+            for (String string : yourPurchases) {
+                String numBought = string.substring(0, string.indexOf(','));
+                String seller = string.substring(string.indexOf(',') + 1);
+                System.out.printf("You have bought %s products from %s\n", numBought, seller);
+            }
         }
     }
 
