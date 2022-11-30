@@ -14,6 +14,10 @@ import static java.util.Collections.*;
  * @version 11.13.22
  */
 public class Buyers extends User {
+
+    private ObjectInputStream ois;
+    private ObjectOutputStream oos;
+    //private PrintWriter writer;
     private ArrayList<Product> shoppingCart = new ArrayList<>();
 
     /**
@@ -25,11 +29,10 @@ public class Buyers extends User {
     public Buyers(String email, String password) {
         super(email, password);
         setBuyOrSell("buyer");
-        //setupFile();
     }
 
     /**
-     * This method creatse a buyer given a user
+     * This method creates a buyer given a user
      *
      * @param user The user that is a buyer
      */
@@ -51,26 +54,54 @@ public class Buyers extends User {
 
     /**
      * This method sets up the cart of the buyer. If they already have a cart,
-     * then it is saved in their cart, and it initialtes it
+     * then it is saved in their cart, and it initializes it
      * from that file. Otherwise, it creates a new file for their cart.
      */
     public void setupCart() {
-        ArrayList<String> cart = MarketServer.getList(super.getEmail() + "Cart.txt");
-        for (String s : cart) {
-            shoppingCart.add(new Product(s));
+        try {
+            oos.writeObject("bCart");
+            ArrayList<String> cart = null;
+            try {
+                oos.writeObject(super.getEmail());
+                cart = (ArrayList<String>) ois.readObject();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+            //ArrayList<String> cart = MarketServer.getList(super.getEmail() + "Cart.txt");
+            for (String s : cart) {
+                shoppingCart.add(new Product(s));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
+
+    public void setupSocket(ObjectInputStream ois, PrintWriter writer, ObjectOutputStream oos) {
+        this.ois = ois;
+        //this.writer = writer;
+        this.oos = oos;
     }
 
     /**
      * This method saves the buyer's current cart to their given cart file.
      */
     public void saveCart() {
-        File f = new File(super.getEmail() + "Cart.txt");
-        ArrayList<String> stringCart = new ArrayList<>();
-        for (Product p : shoppingCart) {
-            stringCart.add(p.toString());
+        try {
+            oos.writeObject("bSave");
+            //writer.write(super.getEmail() + "Cart.txt");
+            File f = new File(super.getEmail() + "Cart.txt");
+            ArrayList<String> stringCart = new ArrayList<>();
+            for (Product p : shoppingCart) {
+                stringCart.add(p.toString());
+            }
+            oos.writeObject(stringCart);
+            oos.writeObject(super.getEmail() + "Cart.txt");
+        } catch (IOException e) {
+            System.out.println("Cannot write object");
+            e.printStackTrace();
         }
-        MarketServer.writeToFile(stringCart, f);
     }
 
     /**
@@ -91,10 +122,17 @@ public class Buyers extends User {
      * This method clears the buyer's cart
      */
     private void clearCart() {
-        ArrayList<String> blank = new ArrayList<>();
+        try {
+            oos.writeObject("bClear");
+            oos.writeObject(super.getEmail() + "Cart.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+       /* ArrayList<String> blank = new ArrayList<>();
         blank.add("");
         File f = new File(super.getEmail() + "Cart.txt");
-        MarketServer.writeToFile(blank, f);
+        writer.write("");
+        MarketServer.writeToFile(blank, f);*/
     }
 
     /**
@@ -104,19 +142,28 @@ public class Buyers extends User {
      * @param cart The seller's cart.
      */
     private void addToFile(ArrayList<Product> cart) {
+        try {
+            oos.writeObject("bAdd");
+            File f = new File(super.getEmail() + ".txt");
+            ArrayList<String> newPurchases = new ArrayList<>();
+            for (Product p : cart) {
+                newPurchases.add(p.getName() + "," + p.getSeller() + "\n");
+            }
+            ArrayList<String> newAllPurchases = new ArrayList<>();
+            for (Product p : cart) {
+                newAllPurchases.add(p.getName() + "," + p.getSeller() + "," + super.getEmail() + "," + p.getPrice() + "\n");
+            }
+            File file = new File("AllPurchases.txt");
+            oos.writeObject((ArrayList<String>) newPurchases);
+            oos.writeObject((ArrayList<String>) newAllPurchases);
+            oos.writeObject(super.getEmail() + ".txt");
+            oos.writeObject("AllPurchases.txt");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         clearCart();
-        File f = new File(super.getEmail() + ".txt");
-        ArrayList<String> newPurchases = new ArrayList<>();
-        for (Product p : cart) {
-            newPurchases.add(p.getName() + "," + p.getSeller() + "\n");
-        }
-        ArrayList<String> newAllPurchases = new ArrayList<>();
-        for (Product p : cart) {
-            newAllPurchases.add(p.getName() + "," + p.getSeller() + "," + super.getEmail() + "," + p.getPrice() + "\n");
-        }
-        File file = new File("AllPurchases.txt");
-        MarketServer.writeToFile(newPurchases, f);
-        MarketServer.writeToFile(newAllPurchases, file);
+        //MarketServer.writeToFile(newPurchases, f);
+        //MarketServer.writeToFile(newAllPurchases, file);
         /*
         FileWriter fw;
         try {
@@ -329,9 +376,18 @@ public class Buyers extends User {
                     }
                     break;
                 case 5:
-                    System.out.println("Purchase history:");
-                    File f = new File(super.getEmail() + ".txt");
-                    ArrayList<String> history = MarketServer.getList(super.getEmail() + ".txt");
+                    ArrayList<String> history = null;
+                    try {
+                        oos.writeObject("bHistory");
+                        System.out.println("Purchase history:");
+                        File f = new File(super.getEmail() + ".txt");
+                        oos.writeObject(super.getEmail() + ".txt");
+                        history = (ArrayList<String>) ois.readObject();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    } catch (ClassNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
                     if (history.size() == 0) {
                         System.out.println("No purchased items.");
                     } else {
@@ -458,9 +514,15 @@ public class Buyers extends User {
      * @param input The scanner used for user input
      */
     public void statistics(Scanner input) {
-        //TODO
-        File f = new File("AllPurchases.txt");
-        ArrayList<String> purchases = MarketServer.getList("AllPurchases.txt");
+        ArrayList<String> purchases = null;
+        try {
+        oos.writeObject("bStats");
+            purchases = (ArrayList<String>) ois.readObject();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         //FileReader fr;
         //BufferedReader br;
         ArrayList<String> sellers = new ArrayList<>();

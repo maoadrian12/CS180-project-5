@@ -1,24 +1,87 @@
+import java.lang.reflect.Array;
 import java.net.*;
 import java.io.*;
+import java.sql.SQLOutput;
 import java.util.*;
 
 public class MarketServer implements Runnable {
     Socket socket;
-
-    public MarketServer(Socket socket) throws IOException {
+    ObjectInputStream reader;
+    ObjectOutputStream oos;
+    public MarketServer(Socket socket) {
         this.socket = socket;
+        try {
+            reader = new ObjectInputStream(socket.getInputStream());
+            oos = new ObjectOutputStream(socket.getOutputStream());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
-    @Override
     public void run() {
+
+        System.out.printf("Connection received from %s\n", socket);
         try {
-            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             File f = new File("Listings.txt");
-            BufferedReader br;
-            br = new BufferedReader(new FileReader(f));
-            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             ArrayList<Store> market = Market.fromFile(f);
-        } catch (IOException e) {
+            while (true) {
+                String s = (String) reader.readObject();
+                switch (s) {
+                    case "bCart":
+                        String email = (String) reader.readObject();
+                        oos.writeObject(getList(email + "Cart.txt"));
+                        break;
+                    case "bSave":
+                        ArrayList<String> cart = (ArrayList<String>) reader.readObject();
+                        String fileName = (String) reader.readObject();
+                        writeToFile(cart, fileName);
+                        break;
+                    case "bClear":
+                        String name = (String) reader.readObject();
+                        ArrayList<String> blank = new ArrayList<>();
+                        blank.add("");
+                        writeToFile(blank, name);
+                        break;
+                    case "bAdd":
+                        ArrayList<String> newPurchases = (ArrayList<String>) reader.readObject();
+                        ArrayList<String> newAllPurchases = (ArrayList<String>) reader.readObject();
+                        String purchaseFile = (String) reader.readObject();
+                        String allPurchase = (String) reader.readObject();
+                        writeAndAppend(newPurchases, purchaseFile);
+                        writeAndAppend(newAllPurchases, allPurchase);
+                        break;
+                    case "bHistory":
+                        String history = (String) reader.readObject();
+                        oos.writeObject(getList(history));
+                        break;
+                    case "bStats":
+                        oos.writeObject(getList("AllPurchases.txt"));
+                        break;
+                    case "sSetup":
+                        oos.writeObject(getList((String) reader.readObject()));
+                        break;
+                    case "sCart":
+                        oos.writeObject(getList("AllPurchases.txt"));
+                        oos.writeObject(getList((String) reader.readObject()));
+                        break;
+                    case "sImport":
+                        oos.writeObject(getList((String) reader.readObject()));
+                        break;
+                    case "sExport":
+                        String nameOfFile = (String) reader.readObject();
+                        ArrayList<String> products = (ArrayList<String>) reader.readObject();
+                        writeToFile(products, nameOfFile);
+                        break;
+                    case "sStats":
+                        break;
+                    default:
+                        System.out.println("Error with that input");
+                        break;
+                }
+
+            }
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
 
@@ -42,13 +105,14 @@ public class MarketServer implements Runnable {
         return list;
     }
 
-    public static boolean writeToFile(ArrayList<String> s, File f) {
+    public boolean writeAndAppend(ArrayList<String> s, String fileName) {
         try {
+            File f = new File(fileName);
             FileWriter fw = null;
             if (!f.exists() || f.length() == 0) {
                 fw = new FileWriter(f);
             } else {
-                fw = new FileWriter(f, false);
+                fw = new FileWriter(f, true);
             }
             for (String str : s) {
                 fw.write(str);
@@ -62,12 +126,31 @@ public class MarketServer implements Runnable {
         }
     }
 
+    public void writeToFile(ArrayList<String> s, String fileName) throws IOException {
+        try {
+            File f = new File(fileName);
+            FileWriter fw = null;
+            if (!f.exists() || f.length() == 0) {
+                fw = new FileWriter(f);
+            } else {
+                fw = new FileWriter(f, false);
+            }
+            for (String str : s) {
+                fw.write(str);
+            }
+            fw.close();
+        } catch (IOException e) {
+            System.out.println("Error writing to file");
+            throw new IOException();
+        }
+    }
+
     public static void main(String[] args) throws IOException {
         ServerSocket marketServer = new ServerSocket(1234);
         while (true) {
             Socket s = marketServer.accept();
             MarketServer ms = new MarketServer(s);
-            new Thread(ms).run();
+            new Thread(ms).start();
         }
     }
 }

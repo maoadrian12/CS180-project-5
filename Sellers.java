@@ -11,6 +11,9 @@ import java.util.*;
  * @version 11.13.22
  */
 public class Sellers extends User {
+
+    private ObjectInputStream ois;
+    private ObjectOutputStream oos;
     private ArrayList<Product> productList = new ArrayList<>();
     private Store store;
 
@@ -44,11 +47,19 @@ public class Sellers extends User {
      */
     private void setupInfo(String email) {
         //File f = new File(email + ".txt");
-        ArrayList<String> products = MarketServer.getList(email + ".txt");
-        for (String s : products) {
-            productList.add(new Product(s));
+        try {
+            oos.writeObject("sSetup");
+            oos.writeObject(email + ".txt");
+            ArrayList<String> products = (ArrayList<String>) ois.readObject();
+            for (String s : products) {
+                productList.add(new Product(s));
+            }
+            store = new Store(email);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
-        store = new Store(email);
         /*if (f.exists()) {
             try {
                 fr = new FileReader(f);
@@ -64,6 +75,11 @@ public class Sellers extends User {
                 e.printStackTrace();
             }
         }*/
+    }
+
+    public void setupSocket(ObjectInputStream ois, ObjectOutputStream oos) {
+        this.ois = ois;
+        this.oos = oos;
     }
 
     /**
@@ -378,29 +394,37 @@ public class Sellers extends User {
      * This method allows the seller to view what is in each buyer's cart.
      */
     public void viewCarts() {
-        ArrayList<String> accounts = MarketServer.getList("UserAccounts.txt");
-        int numItems = 0;
-        for (String s : accounts) {
-            String name = s.substring(0, s.indexOf(','));
-            s = s.substring(s.indexOf(',') + 1);
-            String status = s.substring(s.indexOf(',') + 1);
-            if (status.equals("buyer")) {
-                ArrayList<String> carts = MarketServer.getList(name + "Cart.txt");
-                if (carts.size() > 0) {
-                    System.out.println("Customer " + name + " has: ");
-                    for (String str : carts) {
-                        Product p = new Product(str);
-                        numItems++;
-                        System.out.printf("\t%s, sold by %s, priced at %.2f\n",
-                                p.getName(), p.getSeller(), p.getPrice());
+
+        ArrayList<String> accounts = null;
+        try {
+            oos.writeObject("sCart");
+            accounts = (ArrayList<String>) ois.readObject();
+            int numItems = 0;
+            for (String s : accounts) {
+                String name = s.substring(0, s.indexOf(','));
+                s = s.substring(s.indexOf(',') + 1);
+                String status = s.substring(s.indexOf(',') + 1);
+                if (status.equals("buyer")) {
+                    oos.writeObject(name + "Cart.txt");
+                    ArrayList<String> carts = (ArrayList<String>) ois.readObject();
+                    if (carts.size() > 0) {
+                        System.out.println("Customer " + name + " has: ");
+                        for (String str : carts) {
+                            Product p = new Product(str);
+                            numItems++;
+                            System.out.printf("\t%s, sold by %s, priced at %.2f\n",
+                                    p.getName(), p.getSeller(), p.getPrice());
+                        }
                     }
                 }
             }
-        }
-
-
-        if (numItems == 0) {
-            System.out.println("Nothing in carts!");
+            if (numItems == 0) {
+                System.out.println("Nothing in carts!");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -558,7 +582,16 @@ public class Sellers extends User {
     public void im(Scanner input) {
         System.out.println("What path do you want to import from?");
         String answer = input.nextLine();
-        ArrayList<String> products = MarketServer.getList(answer);
+        ArrayList<String> products = null;
+        try {
+            oos.writeObject("sImport");
+            oos.writeObject(answer);
+            products = (ArrayList<String>) ois.readObject();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         //File f = new File(answer);
         if (products.isEmpty()) {
             System.out.println("Error importing from file, aborting...");
@@ -601,16 +634,18 @@ public class Sellers extends User {
      */
     public void export() {
         System.out.println("Exporting to " + super.getEmail() + ".csv...");
-        File f = new File(super.getEmail() + ".csv");
+        String s = super.getEmail() + ".csv";
         ArrayList<String> products = new ArrayList<>();
         for (Product p : productList) {
             products.add(p.toString());
         }
-        if (MarketServer.writeToFile(products, f)) {
-            System.out.println("Exported");
-        } else {
+        try {
+            oos.writeObject(s);
+            oos.writeObject(products);
+        } catch (IOException e) {
             System.out.println("Cannot write to that file, sorry!");
         }
+
         /*
         try {
             FileWriter fw = new FileWriter(f);

@@ -32,7 +32,7 @@ public class Market {
      * This method gets the market from a given file.
      * @param f The file that contains the entire market
      */
-    public static void fromFile(File f) {
+    public static ArrayList<Store> fromFile(File f) {
         try {
             if (!f.exists()) {
                 f.createNewFile();
@@ -61,6 +61,7 @@ public class Market {
             System.out.println("Listings.txt not found, creating new file...");
         }
         toFile();
+        return market;
     }
 
     /**
@@ -132,6 +133,7 @@ public class Market {
         Scanner input = new Scanner(System.in);
         if (user instanceof Buyers) {
             Buyers buyer = new Buyers(user);
+
             buyer.choices(buyer, market, input);
         } else if (user instanceof Sellers) {
             Sellers seller = new Sellers(user);
