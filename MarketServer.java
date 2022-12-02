@@ -28,6 +28,9 @@ public class MarketServer implements Runnable {
             while (true) {
                 String s = (String) reader.readObject();
                 switch (s) {
+                    case "setup":
+                        oos.writeObject(market);
+                        break;
                     case "bCart":
                         String email = (String) reader.readObject();
                         oos.writeObject(getList(email + "Cart.txt"));
@@ -58,6 +61,9 @@ public class MarketServer implements Runnable {
                     case "bStats":
                         oos.writeObject(getList("AllPurchases.txt"));
                         break;
+                    case "file":
+                        Market.toFile();
+                        break;
                     case "sSetup":
                         oos.writeObject(getList((String) reader.readObject()));
                         break;
@@ -74,6 +80,13 @@ public class MarketServer implements Runnable {
                         writeToFile(products, nameOfFile);
                         break;
                     case "sStats":
+                        break;
+                    case "sPrint":
+                        Store store = (Store) reader.readObject();
+                        store.printToFile();
+                        break;
+                    case "close":
+                        Market.updateListings();
                         break;
                     default:
                         System.out.println("Error with that input");

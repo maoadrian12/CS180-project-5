@@ -384,9 +384,9 @@ public class Buyers extends User {
                         oos.writeObject(super.getEmail() + ".txt");
                         history = (ArrayList<String>) ois.readObject();
                     } catch (IOException e) {
-                        throw new RuntimeException(e);
+                        e.printStackTrace();
                     } catch (ClassNotFoundException e) {
-                        throw new RuntimeException(e);
+                        e.printStackTrace();
                     }
                     if (history.size() == 0) {
                         System.out.println("No purchased items.");
@@ -471,8 +471,12 @@ public class Buyers extends User {
                     break;
                 case 11:
                     saveCart();
-                    Market.toFile();
-                    Market.updateListings();
+                    try {
+                        oos.writeObject("file");
+                        oos.writeObject("close");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 default:
                     System.out.println("Enter Valid Number");
@@ -585,8 +589,12 @@ public class Buyers extends User {
 
     public void updateCart() {
         saveCart();
-        Market.toFile();
-        Market.updateListings();
+        try {
+            oos.writeObject("file");
+            oos.writeObject("close");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

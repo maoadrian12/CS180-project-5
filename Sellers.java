@@ -289,15 +289,21 @@ public class Sellers extends User {
                 case 8:
                     super.deleteAccount();
                     productList = new ArrayList<>();
-                    store.setProducts(productList);
-                    store.printToFile(new File(super.getEmail() + ".txt"));
+                    update();
+                    /*store.setProducts(productList);
+                    store.printToFile(new File(super.getEmail() + ".txt"));*/
                     choice = 9;
                     break;
                 case 9:
                     // keep for exit statement
-                    store.setProducts(productList);
-                    store.printToFile(new File(super.getEmail() + ".txt"));
-                    Market.updateListings();
+                    /*store.setProducts(productList);
+                    store.printToFile(new File(super.getEmail() + ".txt"));*/
+                    update();
+                    try {
+                        oos.writeObject("close");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 default:
                     System.out.println("Enter Valid Number");
@@ -662,8 +668,14 @@ public class Sellers extends User {
 
     public void update() {
         store.setProducts(productList);
-        store.printToFile(new File(super.getEmail() + ".txt"));
-        Market.updateListings();
+        try {
+            oos.writeObject("sPrint");
+            oos.writeObject(store);
+            //store.printToFile(new File(super.getEmail() + ".txt"));
+            oos.writeObject("close");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

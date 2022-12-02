@@ -1,8 +1,10 @@
+import java.io.Serializable;
+
 /**
  * @author Mao, Chakrabarty, Lee, Johnson, Muthyala
  * @version 11.13.22
  */
-public class Product {
+public class Product implements Serializable {
 
     private String name;
     private String seller;

@@ -4,7 +4,7 @@ import java.io.*;
  * @author Mao, Chakrabarty, Lee, Johnson, Muthyala
  * @version 11.13.22
  */
-public class Store {
+public class Store implements Serializable {
     private ArrayList<Product> products;
     private String sellerName;
 

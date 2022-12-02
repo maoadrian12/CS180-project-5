@@ -3,7 +3,7 @@ import java.io.*;
 import java.util.*;
 
 public class MarketClient {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
         Scanner input = new Scanner(System.in);
         System.out.println("Port?");
         int port = input.nextInt();
@@ -17,7 +17,9 @@ public class MarketClient {
         //oos.writeObject("Hello!");
         ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
         //String s = reader.readLine();
-        ArrayList<Store> market = Market.fromFile(new File("Listings.txt"));
+        oos.writeObject("setup");
+
+        ArrayList<Store> market = (ArrayList<Store>) ois.readObject();
 
         User user = User.prompt(); // returns user object
         if (user.getEmail().isEmpty() || user.getEmail().isBlank()) {
@@ -36,6 +38,6 @@ public class MarketClient {
         } else {
             System.out.println("IDK what happened");
         }
-        Market.updateListings();
+        oos.writeObject("close");
     }
 }

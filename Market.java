@@ -16,6 +16,7 @@ public class Market {
      * @param m The market
      */
     public static void toFile(File f, ArrayList<Store> m) {
+        //THIS ONE'S OKAY
         try {
             PrintWriter pw = new PrintWriter(f);
             for (int i = 0; i < m.size(); i++) {
@@ -33,6 +34,7 @@ public class Market {
      * @param f The file that contains the entire market
      */
     public static ArrayList<Store> fromFile(File f) {
+        //THIS ONE'S ALSO OKAY
         try {
             if (!f.exists()) {
                 f.createNewFile();
@@ -77,6 +79,7 @@ public class Market {
      * THis method updates Listings.txt, the file that contains all the information in the market.
      */
     public static void updateListings() {
+        //THIS IS OKAY
         try {
             ArrayList<Store> tempList = new ArrayList<>();
             int marketIndex = 0;
