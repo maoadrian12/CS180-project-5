@@ -329,7 +329,6 @@ public class Buyers extends User {
                         System.out.println(p.getListing());
                         System.out.println();
                     }
-
                     break;
                 case 4:
                     if (allProducts.size() == 0) {
@@ -595,4 +594,15 @@ public class Buyers extends User {
         }
     }
 
+    public ArrayList<Product> refresh() {
+        try {
+            oos.writeObject("bRefresh");
+            return getAllProducts((ArrayList<Store>) ois.readObject());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
 }

@@ -61,6 +61,10 @@ public class MarketServer implements Runnable {
                     case "bStats":
                         oos.writeObject(getList("AllPurchases.txt"));
                         break;
+                    case "bRefresh":
+                        ArrayList<Store> stores = mkt.fromFile(new File("Listings.txt"));
+                        oos.writeObject(stores);
+                        break;
                     case "file":
                         mkt.toFile();
                         break;
@@ -94,6 +98,8 @@ public class MarketServer implements Runnable {
                 }
 
             }
+        } catch (SocketException e) {
+            System.out.println("Socket " + socket + " has disconnected.");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }

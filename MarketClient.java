@@ -5,12 +5,25 @@ import java.util.*;
 public class MarketClient {
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         Scanner input = new Scanner(System.in);
-        System.out.println("Port?");
-        int port = input.nextInt();
+        int port = -1;
+        do {
+            System.out.println("Port?");
+            try {
+                port = input.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println("Please enter an integer.");
+            }
+        } while (port == -1);
         input.nextLine();
         System.out.println("Host?");
         String host = input.nextLine();
-        Socket socket = new Socket(host, port);
+        Socket socket = null;
+        try {
+            socket = new Socket(host, port);
+        } catch (Exception e) {
+            System.out.println("Connection unsuccessful, terminating program...");
+            System.exit(1);
+        }
         ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
         ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
         ArrayList<Store> market = (ArrayList<Store>) ois.readObject();
@@ -29,7 +42,7 @@ public class MarketClient {
             buyer.choices(buyer, market, input);
         } else if (user instanceof Sellers) {
             Sellers seller = new Sellers(user);
-            //seller.setupSocket(ois, oos);
+            seller.setupSocket(ois, oos);
             seller.choices(seller, market, input);
         }
         Market.updateListings();
