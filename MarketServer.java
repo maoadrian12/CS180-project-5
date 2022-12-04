@@ -18,13 +18,13 @@ public class MarketServer implements Runnable {
         }
 
     }
-
     public void run() {
-
         System.out.printf("Connection received from %s\n", socket);
         try {
             File f = new File("Listings.txt");
-            ArrayList<Store> market = Market.fromFile(f);
+            Market mkt = new Market();
+            ArrayList<Store> market = mkt.fromFile(f);
+            oos.writeObject(market);
             while (true) {
                 String s = (String) reader.readObject();
                 switch (s) {
@@ -62,7 +62,7 @@ public class MarketServer implements Runnable {
                         oos.writeObject(getList("AllPurchases.txt"));
                         break;
                     case "file":
-                        Market.toFile();
+                        mkt.toFile();
                         break;
                     case "sSetup":
                         oos.writeObject(getList((String) reader.readObject()));
@@ -139,7 +139,7 @@ public class MarketServer implements Runnable {
         }
     }
 
-    public void writeToFile(ArrayList<String> s, String fileName) throws IOException {
+    public static void writeToFile(ArrayList<String> s, String fileName) throws IOException {
         try {
             File f = new File(fileName);
             FileWriter fw = null;
@@ -149,7 +149,7 @@ public class MarketServer implements Runnable {
                 fw = new FileWriter(f, false);
             }
             for (String str : s) {
-                fw.write(str);
+                fw.write(str + "\n");
             }
             fw.close();
         } catch (IOException e) {

@@ -8,7 +8,7 @@ import java.util.*;
  * @version 11.13.22
  */
 public class Market {
-    private static ArrayList<Store> market = new ArrayList<Store>();
+    private ArrayList<Store> market = new ArrayList<Store>();
 
     /**
      * This method prints the given market to a file.
@@ -29,11 +29,18 @@ public class Market {
         }
     }
 
+    public void setMarket(ArrayList<Store> market2) {
+        market.clear();
+        for (Store s : market2) {
+            market.add(s);
+        }
+    }
+
     /**
      * This method gets the market from a given file.
      * @param f The file that contains the entire market
      */
-    public static ArrayList<Store> fromFile(File f) {
+    public ArrayList<Store> fromFile(File f) {
         //THIS ONE'S ALSO OKAY
         try {
             if (!f.exists()) {
@@ -62,14 +69,14 @@ public class Market {
         } catch (IOException e) {
             System.out.println("Listings.txt not found, creating new file...");
         }
-        toFile();
+        //toFile();
         return market;
     }
 
     /**
      * This method prints each store in Market to its given file
      */
-    public static void toFile() {
+    public void toFile() {
         for (int i = 0; i < market.size(); i++) {
             market.get(i).printToFile();
         }
@@ -120,13 +127,13 @@ public class Market {
         }
     }
 
-    /**
+
+    /*
      * The main method that starts the entire program.
      * @param args User arguments(useless)
-     */
+
     public static void main(String[] args) {
         fromFile(new File("Listings.txt"));
-
         User user = User.prompt(); // returns user object
         if (user.getEmail().isEmpty() || user.getEmail().isBlank()) {
             System.out.println("Goodbye.");
@@ -144,4 +151,5 @@ public class Market {
         }
         updateListings();
     }
+    */
 }

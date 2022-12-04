@@ -1,3 +1,6 @@
-Seller name: c
-name,c,desc,3,123.00
+Seller name: seller
+name,seller,name,0,1.00
+
+Seller name: seller2
+name2,seller2,name2,0,2.00
 

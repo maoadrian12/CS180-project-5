@@ -11,16 +11,12 @@ public class MarketClient {
         System.out.println("Host?");
         String host = input.nextLine();
         Socket socket = new Socket(host, port);
-        //BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
         ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-        //oos.writeObject("Hello!");
         ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-        //String s = reader.readLine();
-        oos.writeObject("setup");
-
         ArrayList<Store> market = (ArrayList<Store>) ois.readObject();
-
+        for (Store s : market) {
+            System.out.println(s);
+        }
         User user = User.prompt(); // returns user object
         if (user.getEmail().isEmpty() || user.getEmail().isBlank()) {
             System.out.println("Goodbye.");
@@ -29,15 +25,13 @@ public class MarketClient {
         }
         if (user instanceof Buyers) {
             Buyers buyer = new Buyers(user);
-            buyer.setupSocket(ois, writer, oos);
+            buyer.setupSocket(ois, oos);
             buyer.choices(buyer, market, input);
         } else if (user instanceof Sellers) {
             Sellers seller = new Sellers(user);
-            seller.setupSocket(ois, oos);
+            //seller.setupSocket(ois, oos);
             seller.choices(seller, market, input);
-        } else {
-            System.out.println("IDK what happened");
         }
-        oos.writeObject("close");
+        Market.updateListings();
     }
 }

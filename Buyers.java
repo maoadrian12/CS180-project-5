@@ -78,7 +78,7 @@ public class Buyers extends User {
         }
     }
 
-    public void setupSocket(ObjectInputStream ois, PrintWriter writer, ObjectOutputStream oos) {
+    public void setupSocket(ObjectInputStream ois, ObjectOutputStream oos) {
         this.ois = ois;
         //this.writer = writer;
         this.oos = oos;
@@ -198,7 +198,6 @@ public class Buyers extends User {
         Scanner scanner = new Scanner(System.in);
         int choice = -1;
         ArrayList<Product> allProducts = getAllProducts(market);
-
         do {
             System.out.println("Would you like to:");
             System.out.println("\t1. View current listings");
@@ -224,7 +223,6 @@ public class Buyers extends User {
             } while (true);
             switch (choice) {
                 case 1:
-
                     if (allProducts.size() == 0) {
                         System.out.println("No products are currently listed.");
                         break;
@@ -234,7 +232,6 @@ public class Buyers extends User {
                         System.out.println(p.getListing());
                         System.out.println();
                     }
-
                     System.out.println("Would you like to see a specific product? (y/n)");
                     String ans = scanner.nextLine();
                     if (ans.equals("y")) {
@@ -258,7 +255,6 @@ public class Buyers extends User {
                     }
                     break;
                 case 2:
-
                     if (allProducts.size() == 0) {
                         System.out.println("No products are currently listed.");
                         break;
@@ -336,7 +332,6 @@ public class Buyers extends User {
 
                     break;
                 case 4:
-
                     if (allProducts.size() == 0) {
                         System.out.println("No products are currently listed.");
                         break;
@@ -471,12 +466,15 @@ public class Buyers extends User {
                     break;
                 case 11:
                     saveCart();
-                    try {
+                    Market mkt = new Market();
+                    mkt.setMarket(market);
+                    mkt.toFile();
+                    /*try {
                         oos.writeObject("file");
                         oos.writeObject("close");
                     } catch (IOException e) {
                         e.printStackTrace();
-                    }
+                    }*/
                     break;
                 default:
                     System.out.println("Enter Valid Number");

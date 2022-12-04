@@ -56,11 +56,11 @@ public class Store implements Serializable {
     public void printToFile() {
         File f = new File(fileName);
         try {
-            PrintWriter pw = new PrintWriter(f);
+            FileWriter fw = new FileWriter(f);
             for (int i = 0; i < products.size(); i++) {
-                pw.write(products.get(i).toString() + "\n");
+                fw.write(products.get(i).toString() + "\n");
             }
-            pw.close();
+            fw.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -70,7 +70,7 @@ public class Store implements Serializable {
      * This method prints the given store to a given file.
      * @param f The file to print the store to.
      */
-    public void printToFile(File  f) {
+    public void printToFile(File f) {
         try {
             FileWriter fw = new FileWriter(f);
             for (int i = 0; i < products.size(); i++) {
