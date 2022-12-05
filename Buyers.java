@@ -16,6 +16,7 @@ import static java.util.Collections.*;
 public class Buyers extends User {
 
     private ObjectInputStream ois;
+    private ArrayList<Product> allProducts;
     private ObjectOutputStream oos;
     //private PrintWriter writer;
     private ArrayList<Product> shoppingCart = new ArrayList<>();
@@ -39,18 +40,8 @@ public class Buyers extends User {
     public Buyers(User user) {
         super(user.getEmail(), user.getPassword());
         setBuyOrSell("buyer");
-        //setupFile();
     }
 
-
-    /**
-     * This method sets up the file that belongs to the buyer, which contains their purchase history
-     * Not certain if we need this method so I commented it out
-     */
-    /*public void setupFile() {
-        //TODO
-        File f = new File(super.getEmail() + ".txt");
-    }*/
 
     /**
      * This method sets up the cart of the buyer. If they already have a cart,
@@ -91,7 +82,6 @@ public class Buyers extends User {
         try {
             oos.writeObject("bSave");
             //writer.write(super.getEmail() + "Cart.txt");
-            File f = new File(super.getEmail() + "Cart.txt");
             ArrayList<String> stringCart = new ArrayList<>();
             for (Product p : shoppingCart) {
                 stringCart.add(p.toString());
@@ -128,11 +118,6 @@ public class Buyers extends User {
         } catch (IOException e) {
             e.printStackTrace();
         }
-       /* ArrayList<String> blank = new ArrayList<>();
-        blank.add("");
-        File f = new File(super.getEmail() + "Cart.txt");
-        writer.write("");
-        MarketServer.writeToFile(blank, f);*/
     }
 
     /**
@@ -144,7 +129,6 @@ public class Buyers extends User {
     private void addToFile(ArrayList<Product> cart) {
         try {
             oos.writeObject("bAdd");
-            File f = new File(super.getEmail() + ".txt");
             ArrayList<String> newPurchases = new ArrayList<>();
             for (Product p : cart) {
                 newPurchases.add(p.getName() + "," + p.getSeller() + "\n");
@@ -153,7 +137,6 @@ public class Buyers extends User {
             for (Product p : cart) {
                 newAllPurchases.add(p.getName() + "," + p.getSeller() + "," + super.getEmail() + "," + p.getPrice() + "\n");
             }
-            File file = new File("AllPurchases.txt");
             oos.writeObject((ArrayList<String>) newPurchases);
             oos.writeObject((ArrayList<String>) newAllPurchases);
             oos.writeObject(super.getEmail() + ".txt");
@@ -162,27 +145,6 @@ public class Buyers extends User {
             throw new RuntimeException(e);
         }
         clearCart();
-        //MarketServer.writeToFile(newPurchases, f);
-        //MarketServer.writeToFile(newAllPurchases, file);
-        /*
-        FileWriter fw;
-        try {
-            if (!f.exists()) {
-                fw = new FileWriter(f);
-            }
-            fw = new FileWriter(f, true);
-            for (Product p : cart) {
-                fw.write(p.getName() + "," + p.getSeller() + "\n");
-            }
-            fw.close();
-            FileWriter flw = new FileWriter(file, true);
-            for (Product p : cart) {
-                flw.write(p.getName() + "," + p.getSeller() + "," + super.getEmail() + "," + p.getPrice() + "\n");
-            }
-            flw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
     }
 
 
@@ -197,8 +159,9 @@ public class Buyers extends User {
         setupCart();
         Scanner scanner = new Scanner(System.in);
         int choice = -1;
-        ArrayList<Product> allProducts = getAllProducts(market);
+        allProducts = getAllProducts(market);
         do {
+            refresh();
             System.out.println("Would you like to:");
             System.out.println("\t1. View current listings");
             System.out.println("\t2. Search for specific products");
@@ -279,7 +242,6 @@ public class Buyers extends User {
                     }
                     break;
                 case 3:
-
                     if (allProducts.size() == 0) {
                         System.out.println("No products are currently listed.");
                         break;
@@ -367,6 +329,8 @@ public class Buyers extends User {
                     }
                     if (!find) {
                         System.out.println("No item matching that name!");
+                    } else {
+                        saveCart();
                     }
                     break;
                 case 5:
@@ -374,7 +338,6 @@ public class Buyers extends User {
                     try {
                         oos.writeObject("bHistory");
                         System.out.println("Purchase history:");
-                        File f = new File(super.getEmail() + ".txt");
                         oos.writeObject(super.getEmail() + ".txt");
                         history = (ArrayList<String>) ois.readObject();
                     } catch (IOException e) {
@@ -410,6 +373,7 @@ public class Buyers extends User {
                                 addToFile(shoppingCart);
                                 shoppingCart = new ArrayList<Product>();
                                 clearCart();
+                                saveCart();
                             } else {
                                 System.out.println("Incorrect password, purchase cancelled.");
                             }
@@ -441,6 +405,7 @@ public class Buyers extends User {
                                     System.out.println("Removed " + shoppingCart.get(count).getName());
                                     shoppingCart.get(count).increaseQuantity();
                                     shoppingCart.remove(count);
+                                    saveCart();
                                 } catch (Exception e) {
                                     System.out.println("Please enter a valid integer.");
                                     count = -2;
@@ -467,13 +432,8 @@ public class Buyers extends User {
                     saveCart();
                     Market mkt = new Market();
                     mkt.setMarket(market);
+                    //TODO fix this
                     mkt.toFile();
-                    /*try {
-                        oos.writeObject("file");
-                        oos.writeObject("close");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }*/
                     break;
                 default:
                     System.out.println("Enter Valid Number");
@@ -517,7 +477,7 @@ public class Buyers extends User {
     public void statistics(Scanner input) {
         ArrayList<String> purchases = null;
         try {
-        oos.writeObject("bStats");
+            oos.writeObject("bStats");
             purchases = (ArrayList<String>) ois.readObject();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -584,25 +544,23 @@ public class Buyers extends User {
         }
     }
 
-    public void updateCart() {
-        saveCart();
+    public void refresh() {
+        ArrayList<Store> newList = new ArrayList<>();
         try {
-            oos.writeObject("file");
+            oos.writeObject("bRefresh");
+            newList = (ArrayList<Store>) ois.readObject();
+            allProducts = getAllProducts(newList);
+            Market mkt = new Market();
+            mkt.setMarket(newList);
+            //TODO fix this
+            mkt.toFile();
+            mkt.fromFile(new File("Listings.txt"));
             oos.writeObject("close");
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    public ArrayList<Product> refresh() {
-        try {
-            oos.writeObject("bRefresh");
-            return getAllProducts((ArrayList<Store>) ois.readObject());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        return null;
-    }
 }

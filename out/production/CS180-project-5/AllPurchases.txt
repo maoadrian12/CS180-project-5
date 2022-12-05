@@ -9,3 +9,5 @@ name2,seller2,buyer,2.0
 name2,seller2,buyer,2.0
 name2,seller2,buyer,2.0
 name2,seller2,buyer,2.0
+DOES,seller,buyer,3.0
+DOES,seller,buyer,3.0

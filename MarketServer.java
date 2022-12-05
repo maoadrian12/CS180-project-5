@@ -62,8 +62,8 @@ public class MarketServer implements Runnable {
                         oos.writeObject(getList("AllPurchases.txt"));
                         break;
                     case "bRefresh":
-                        ArrayList<Store> stores = mkt.fromFile(new File("Listings.txt"));
-                        oos.writeObject(stores);
+                        ArrayList<Store> market2 = mkt.fromFile(f);
+                        oos.writeObject(market2);
                         break;
                     case "file":
                         mkt.toFile();
@@ -72,7 +72,7 @@ public class MarketServer implements Runnable {
                         oos.writeObject(getList((String) reader.readObject()));
                         break;
                     case "sCart":
-                        oos.writeObject(getList("AllPurchases.txt"));
+                        oos.writeObject(getList("UserAccounts.txt"));
                         oos.writeObject(getList((String) reader.readObject()));
                         break;
                     case "sImport":

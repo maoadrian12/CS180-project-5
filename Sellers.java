@@ -89,6 +89,7 @@ public class Sellers extends User {
         int choice = -1;
 
         do {
+            update();
             System.out.println("Would you like to:");
             System.out.println("\t1. Create Product");
             System.out.println("\t2. Edit Product");
@@ -159,7 +160,6 @@ public class Sellers extends User {
                         }
                     } while (p == -1);
                     createProduct(n, super.getEmail(), desc, q, p);
-                    update();
                     break;
                 case 2:
                     boolean sent = false;
@@ -227,7 +227,6 @@ public class Sellers extends User {
                             input.nextLine();
                         }
                     } while (!sent);
-                    update();
                     break;
                 case 3:
                     int num = -2;
@@ -251,7 +250,6 @@ public class Sellers extends User {
                             input.nextLine();
                         }
                     } while (num == -2);
-                    update();
                     break;
                 case 4:
                     if (productList != null && productList.size() != 0) {
@@ -283,12 +281,10 @@ public class Sellers extends User {
                             System.out.println("Please enter either i or e.");
                         }
                     } while (sent);
-                    update();
                     break;
                 case 8:
                     super.deleteAccount();
                     productList = new ArrayList<>();
-                    update();
                     /*store.setProducts(productList);
                     store.printToFile(new File(super.getEmail() + ".txt"));*/
                     choice = 9;
@@ -297,7 +293,6 @@ public class Sellers extends User {
                     // keep for exit statement
                     /*store.setProducts(productList);
                     store.printToFile(new File(super.getEmail() + ".txt"));*/
-                    update();
                     try {
                         oos.writeObject("close");
                     } catch (IOException e) {
@@ -399,8 +394,7 @@ public class Sellers extends User {
      * This method allows the seller to view what is in each buyer's cart.
      */
     public void viewCarts() {
-
-        ArrayList<String> accounts = null;
+        ArrayList<String> accounts;
         try {
             oos.writeObject("sCart");
             accounts = (ArrayList<String>) ois.readObject();

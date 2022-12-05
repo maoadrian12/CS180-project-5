@@ -29,6 +29,7 @@ public class MarketClient {
         ArrayList<Store> market = (ArrayList<Store>) ois.readObject();
         for (Store s : market) {
             System.out.println(s);
+            //THIS IS FOR DEBUGGING
         }
         User user = User.prompt(); // returns user object
         if (user.getEmail().isEmpty() || user.getEmail().isBlank()) {

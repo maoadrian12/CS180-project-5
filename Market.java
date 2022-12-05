@@ -42,6 +42,7 @@ public class Market {
      */
     public ArrayList<Store> fromFile(File f) {
         //THIS ONE'S ALSO OKAY
+        market.clear();
         try {
             if (!f.exists()) {
                 f.createNewFile();
