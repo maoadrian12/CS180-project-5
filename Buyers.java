@@ -18,7 +18,6 @@ public class Buyers extends User {
     private ObjectInputStream ois;
     private ArrayList<Product> allProducts;
     private ObjectOutputStream oos;
-    //private PrintWriter writer;
     private ArrayList<Product> shoppingCart = new ArrayList<>();
 
     /**
@@ -41,7 +40,6 @@ public class Buyers extends User {
         super(user.getEmail(), user.getPassword());
         setBuyOrSell("buyer");
     }
-
 
     /**
      * This method sets up the cart of the buyer. If they already have a cart,
@@ -430,9 +428,9 @@ public class Buyers extends User {
                     break;
                 case 11:
                     saveCart();
+                    //TODO fix this
                     Market mkt = new Market();
                     mkt.setMarket(market);
-                    //TODO fix this
                     mkt.toFile();
                     break;
                 default:
@@ -546,13 +544,13 @@ public class Buyers extends User {
 
     public void refresh() {
         ArrayList<Store> newList = new ArrayList<>();
+        /*
         try {
             oos.writeObject("bRefresh");
             newList = (ArrayList<Store>) ois.readObject();
             allProducts = getAllProducts(newList);
             Market mkt = new Market();
             mkt.setMarket(newList);
-            //TODO fix this
             mkt.toFile();
             mkt.fromFile(new File("Listings.txt"));
             oos.writeObject("close");
@@ -560,7 +558,17 @@ public class Buyers extends User {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+        }*/
+        //TODO
+        Market mkt = new Market();
+        allProducts = getAllProducts(mkt.fromFile(new File("Listings.txt")));
+        mkt.setMarket(newList);
+        mkt.toFile();
+        mkt.fromFile(new File("Listings.txt"));
+        try {
+            oos.writeObject("close");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
-
 }

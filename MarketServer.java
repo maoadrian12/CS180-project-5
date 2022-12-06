@@ -86,8 +86,9 @@ public class MarketServer implements Runnable {
                     case "sStats":
                         break;
                     case "sPrint":
-                        Store store = (Store) reader.readObject();
-                        store.printToFile();
+                        Store seller = (Store) reader.readObject();
+                        seller = (Store) reader.readObject();
+                        seller.printToFile(new File((reader.readObject() + ".txt")));
                         break;
                     case "close":
                         Market.updateListings();
