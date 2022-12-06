@@ -6,6 +6,8 @@ import java.util.Scanner;
 import java.util.HashMap;
 import java.util.*;
 
+import static java.util.Collections.reverseOrder;
+
 /**
  * @author Mao, Chakrabarty, Lee, Johnson, Muthyala
  * @version 11.13.22
@@ -261,7 +263,7 @@ public class Sellers extends User {
                     }
                     break;
                 case 5:
-                    viewStatistics();
+                    viewStatistics(input);
                     break;
                 case 6:
                     viewCarts();
@@ -430,9 +432,79 @@ public class Sellers extends User {
     /**
      * This method outputs the seller's statistics.
      */
-    public void viewStatistics() {
+    public void viewStatistics(Scanner input) {
         //TODO
-        File f = new File("AllPurchases.txt");
+        ArrayList<String> purchases = null;
+        try {
+            oos.writeObject("bStats");
+            purchases = (ArrayList<String>) ois.readObject();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        ArrayList<String> buyers = new ArrayList<>();
+        ArrayList<String> allPurchases = new ArrayList<>();
+        ArrayList<String> yourSales = new ArrayList<>();
+
+        for (String s : purchases) {
+            s = s.substring(s.indexOf(',') + 1);
+            s = s.substring(s.indexOf(',') + 1);
+            String buyerName = s.substring(0, s.indexOf(','));
+            if (!buyers.contains(buyerName)) {
+                buyers.add(buyerName);
+            }
+        }
+
+        for (String s : buyers) {
+            int count = 0;
+            for (String str : purchases) {
+                str = str.substring(str.indexOf(',') + 1);
+                str = str.substring(str.indexOf(',') + 1);
+                String buyerName = str.substring(0, str.indexOf(','));
+                if (buyerName.equalsIgnoreCase(s)) {
+                    count++;
+                }
+            }
+
+            allPurchases.add(count + "," + s);
+            System.out.printf("Buyer %s has bought %d products\n", s, count);
+
+        }
+
+        for (int i = 0; i < productList.size(); i++) {
+            int count = 0;
+            for (String s : purchases) {
+                String productName = productList.get(i).getName();
+                s = s.substring(0, s.indexOf(','));
+                if (productName.equalsIgnoreCase(s)) {
+                    count++;
+                }
+            }
+            yourSales.add(count + "," + productList.get(i).getName());
+            System.out.printf("You have sold %d of product %s\n", count, productList.get(i).getName());
+        }
+
+        System.out.println("Would you like to sort?(y/n)");
+        String answer = input.nextLine();
+        if (answer.equalsIgnoreCase("y")) {
+            Collections.sort(allPurchases, reverseOrder());
+            Collections.sort(yourSales, reverseOrder());
+            for (String str : allPurchases) {
+                String numBought = str.substring(0, str.indexOf(','));
+                String buyer = str.substring(str.indexOf(',') + 1);
+                System.out.printf("Buyer %s has bought %s products\n", buyer, numBought);
+            }
+            System.out.println("-----------------------");
+            for (String string : yourSales) {
+                String numBought = string.substring(0, string.indexOf(','));
+                String productName = string.substring(string.indexOf(',') + 1);
+                System.out.printf("You have sold %s of product %s\n", numBought, productName);
+            }
+        }
+
+        /*File f = new File("AllPurchases.txt");
         File f2 = new File("UserAccounts.txt");
         ArrayList<String> buyers = new ArrayList<>();
         try {
@@ -551,7 +623,7 @@ public class Sellers extends User {
             System.out.println();
         } else if (choice.equals("n")) {
 
-        }
+        }*/
     }
 
     /**

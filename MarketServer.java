@@ -84,6 +84,7 @@ public class MarketServer implements Runnable {
                         writeToFile(products, nameOfFile);
                         break;
                     case "sStats":
+                        oos.writeObject(getList("AllPurchases.txt"));
                         break;
                     case "sPrint":
                         Store store = (Store) reader.readObject();
