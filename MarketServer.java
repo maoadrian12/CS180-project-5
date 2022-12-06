@@ -87,8 +87,9 @@ public class MarketServer implements Runnable {
                         oos.writeObject(getList("AllPurchases.txt"));
                         break;
                     case "sPrint":
-                        Store store = (Store) reader.readObject();
-                        store.printToFile();
+                        Store seller = (Store) reader.readObject();
+                        seller = (Store) reader.readObject();
+                        seller.printToFile(new File((reader.readObject() + ".txt")));
                         break;
                     case "close":
                         Market.updateListings();

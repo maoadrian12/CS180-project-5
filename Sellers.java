@@ -89,7 +89,6 @@ public class Sellers extends User {
     public void choices(Sellers seller, ArrayList<Store> market, Scanner input) {
         Scanner scanner = new Scanner(System.in);
         int choice = -1;
-
         do {
             update();
             System.out.println("Would you like to:");
@@ -295,11 +294,11 @@ public class Sellers extends User {
                     // keep for exit statement
                     /*store.setProducts(productList);
                     store.printToFile(new File(super.getEmail() + ".txt"));*/
-                    try {
+                    /*try {
                         oos.writeObject("close");
                     } catch (IOException e) {
                         e.printStackTrace();
-                    }
+                    }*/
                     break;
                 default:
                     System.out.println("Enter Valid Number");
@@ -732,14 +731,23 @@ public class Sellers extends User {
 
     public void update() {
         store.setProducts(productList);
-        try {
+        /*try {
             oos.writeObject("sPrint");
             oos.writeObject(store);
-            //store.printToFile(new File(super.getEmail() + ".txt"));
+            oos.writeObject(super.getEmail());
+            oos.writeObject("close");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+        //TODO
+        store.printToFile(new File(super.getEmail() + ".txt"));
+        //Market.updateListings();
+        try {
             oos.writeObject("close");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
 }
