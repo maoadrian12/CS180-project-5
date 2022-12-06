@@ -435,7 +435,7 @@ public class Sellers extends User {
         //TODO
         ArrayList<String> purchases = null;
         try {
-            oos.writeObject("bStats");
+            oos.writeObject("sStats");
             purchases = (ArrayList<String>) ois.readObject();
         } catch (IOException e) {
             throw new RuntimeException(e);
