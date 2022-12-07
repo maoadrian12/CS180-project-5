@@ -432,7 +432,6 @@ public class Sellers extends User {
      * This method outputs the seller's statistics.
      */
     public void viewStatistics(Scanner input) {
-        //TODO
         ArrayList<String> purchases = null;
         try {
             oos.writeObject("sStats");
@@ -731,18 +730,18 @@ public class Sellers extends User {
 
     public void update() {
         store.setProducts(productList);
-        /*try {
-            oos.writeObject("sPrint");
-            oos.writeObject(store);
-            oos.writeObject(super.getEmail());
-            oos.writeObject("close");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-        //TODO
-        store.printToFile(new File(super.getEmail() + ".txt"));
-        //Market.updateListings();
         try {
+            ArrayList<Product> storeProducts = store.getProducts();
+            oos.writeObject("sPrint");
+            oos.writeObject(super.getEmail());
+            for (Product p : storeProducts) {
+                if (p.toString() != null) {
+                    System.out.println(p.toString());
+                    oos.writeObject(p.toString());
+                    oos.flush();
+                }
+            }
+            oos.writeObject(null);
             oos.writeObject("close");
         } catch (IOException e) {
             e.printStackTrace();
