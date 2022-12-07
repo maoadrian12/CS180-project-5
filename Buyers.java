@@ -428,10 +428,12 @@ public class Buyers extends User {
                     break;
                 case 11:
                     saveCart();
-                    //TODO fix this
-                    Market mkt = new Market();
-                    mkt.setMarket(market);
-                    mkt.toFile();
+                    try {
+                        oos.writeObject("bExit");
+                        oos.writeObject(market);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 default:
                     System.out.println("Enter Valid Number");
@@ -543,31 +545,19 @@ public class Buyers extends User {
     }
 
     public void refresh() {
-        ArrayList<Store> newList = new ArrayList<>();
-        /*
         try {
+            allProducts.clear();
             oos.writeObject("bRefresh");
-            newList = (ArrayList<Store>) ois.readObject();
-            allProducts = getAllProducts(newList);
-            Market mkt = new Market();
-            mkt.setMarket(newList);
-            mkt.toFile();
-            mkt.fromFile(new File("Listings.txt"));
+            while (true) {
+                String s = (String) ois.readObject();
+                if (s == null)
+                    break;
+                allProducts.add(new Product(s));
+            }
             oos.writeObject("close");
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }*/
-        //TODO
-        Market mkt = new Market();
-        allProducts = getAllProducts(mkt.fromFile(new File("Listings.txt")));
-        mkt.setMarket(newList);
-        mkt.toFile();
-        mkt.fromFile(new File("Listings.txt"));
-        try {
-            oos.writeObject("close");
-        } catch (IOException e) {
             e.printStackTrace();
         }
     }

@@ -62,8 +62,22 @@ public class MarketServer implements Runnable {
                         oos.writeObject(getList("AllPurchases.txt"));
                         break;
                     case "bRefresh":
-                        ArrayList<Store> market2 = mkt.fromFile(f);
-                        oos.writeObject(market2);
+                        ArrayList<Store> market2 = mkt.fromFile(new File("Listings.txt"));
+                        for (Store store : market2) {
+                            for (Product p : store.getProducts()) {
+                                oos.writeObject(p.toString());
+                            }
+                        }
+                        oos.writeObject(null);
+                        mkt.setMarket(market2);
+                        mkt.toFile();
+                        mkt.fromFile(new File("Listings.txt"));
+                        break;
+                    case "bExit":
+                        ArrayList<Store> buyerMarket = (ArrayList<Store>) reader.readObject();
+                        Market market3 = new Market();
+                        market3.setMarket(buyerMarket);
+                        market3.toFile();
                         break;
                     case "file":
                         mkt.toFile();
