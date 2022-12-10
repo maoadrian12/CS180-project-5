@@ -1,6 +1,6 @@
-import java.lang.reflect.Array;
 import java.net.*;
 import java.io.*;
+import java.sql.Array;
 import java.sql.SQLOutput;
 import java.util.*;
 
@@ -28,6 +28,24 @@ public class MarketServer implements Runnable {
             while (true) {
                 String s = (String) reader.readObject();
                 switch (s) {
+                    case "uLoad":
+                        oos.writeObject(getList("UserAccounts.txt"));
+                        break;
+                    case "uSignup":
+                        ArrayList<String> userList = (ArrayList<String>) reader.readObject();
+                        writeAndAppend(userList, "UserAccounts.txt");
+                        break;
+                    case "uDelete":
+                        oos.writeObject(getList("UserAccounts.txt"));
+                        ArrayList<String> accounts = new ArrayList<>();
+                        while (true) {
+                            String accountString = (String) reader.readObject();
+                            if (accountString == null)
+                                break;
+                            accounts.add(s);
+                        }
+                        writeToFile(accounts, "UserAccounts.txt");
+                        break;
                     case "setup":
                         oos.writeObject(market);
                         break;
@@ -54,6 +72,24 @@ public class MarketServer implements Runnable {
                         writeAndAppend(newPurchases, purchaseFile);
                         writeAndAppend(newAllPurchases, allPurchase);
                         break;
+                    case "bBuy":
+                        Product buyProduct = new Product((String) reader.readObject());
+                        ArrayList<Store> m = mkt.fromFile(new File("Listings.txt"));
+                        for (Store store : m) {
+                            for (Product product : store.getProducts()) {
+                                if (product.getName().equals(buyProduct.getName())
+                                        && product.getSeller().equals(buyProduct.getSeller())) {
+                                    System.out.println("found!");
+                                    product.decreaseQuantity();
+                                }
+                            }
+                        }
+                        for (Store testStore : m) {
+                            System.out.println(testStore);
+                        }
+                        mkt.setMarket(m);
+                        mkt.toFile();
+                        break;
                     case "bHistory":
                         String history = (String) reader.readObject();
                         oos.writeObject(getList(history));
@@ -64,8 +100,8 @@ public class MarketServer implements Runnable {
                     case "bRefresh":
                         ArrayList<Store> market2 = mkt.fromFile(new File("Listings.txt"));
                         for (Store store : market2) {
-                            for (Product p : store.getProducts()) {
-                                oos.writeObject(p.toString());
+                            for (Product productt : store.getProducts()) {
+                                oos.writeObject(productt.toString());
                             }
                         }
                         oos.writeObject(null);
@@ -162,7 +198,7 @@ public class MarketServer implements Runnable {
                 fw = new FileWriter(f, true);
             }
             for (String str : s) {
-                fw.write(str);
+                fw.write(str + "\n");
             }
             fw.close();
             return true;

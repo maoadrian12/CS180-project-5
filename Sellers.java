@@ -86,7 +86,7 @@ public class Sellers extends User {
     /**
      * Method that prints the different choices the seller can do
      */
-    public void choices(Sellers seller, ArrayList<Store> market, Scanner input) {
+    public synchronized void choices(Sellers seller, ArrayList<Store> market, Scanner input) {
         Scanner scanner = new Scanner(System.in);
         int choice = -1;
         do {
@@ -284,7 +284,7 @@ public class Sellers extends User {
                     } while (sent);
                     break;
                 case 8:
-                    super.deleteAccount();
+                    super.deleteAccount(ois, oos);
                     productList = new ArrayList<>();
                     /*store.setProducts(productList);
                     store.printToFile(new File(super.getEmail() + ".txt"));*/
@@ -728,7 +728,7 @@ public class Sellers extends User {
         }*/
     }
 
-    public void update() {
+    public synchronized void update() {
         store.setProducts(productList);
         try {
             ArrayList<Product> storeProducts = store.getProducts();

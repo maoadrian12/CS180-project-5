@@ -1,9 +1,0 @@
-Seller name: seller
-name,seller,name,3,1.00
-name2,seller,name2,3,3.00
-DOES,seller,IT,1,3.00
-
-Seller name: seller2
-name2,seller2,name2,3,2.00
-name3,seller2,name3,3,3.00
-

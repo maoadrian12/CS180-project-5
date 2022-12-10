@@ -153,7 +153,7 @@ public class Buyers extends User {
      * @param market The arraylist of stores that is the market
      * @param input  The scanner that is used for user input
      */
-    public void choices(Buyers buyer, ArrayList<Store> market, Scanner input) {
+    public synchronized void choices(Buyers buyer, ArrayList<Store> market, Scanner input) {
         setupCart();
         Scanner scanner = new Scanner(System.in);
         int choice = -1;
@@ -423,7 +423,7 @@ public class Buyers extends User {
                     statistics(input);
                     break;
                 case 10:
-                    super.deleteAccount();
+                    super.deleteAccount(ois, oos);
                     choice = 11;
                     break;
                 case 11:
@@ -544,7 +544,7 @@ public class Buyers extends User {
         }
     }
 
-    public void refresh() {
+    public synchronized void refresh() {
         try {
             allProducts.clear();
             oos.writeObject("bRefresh");

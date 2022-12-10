@@ -1,2 +1,0 @@
-name2,seller2,name2,3,2.00
-name3,seller2,name3,3,3.00

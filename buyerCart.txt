@@ -1,7 +1,0 @@
-DOES,seller,IT,0,3.00
-DOES,seller,IT,0,3.00
-DOES,seller,IT,0,3.00
-name3,seller2,name3,1,3.00
-name3,seller2,name3,1,3.00
-DOES,seller,IT,1,3.00
-DOES,seller,IT,1,3.00
