@@ -521,11 +521,9 @@ public class Sellers extends User {
                     buyers.add(buyerName);
                 }
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         HashMap<String, Integer> map = new HashMap<>();
         HashMap<String, Integer> map2 = new HashMap<>();
         for (int i = 0; i < buyers.size(); i++) {
@@ -620,7 +618,6 @@ public class Sellers extends User {
             }
             System.out.println();
         } else if (choice.equals("n")) {
-
         }*/
     }
 
