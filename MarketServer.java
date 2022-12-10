@@ -78,7 +78,7 @@ public class MarketServer implements Runnable {
                         for (Store store : m) {
                             for (Product product : store.getProducts()) {
                                 if (product.getName().equals(buyProduct.getName())
-                                    && product.getSeller().equals(buyProduct.getSeller())) {
+                                        && product.getSeller().equals(buyProduct.getSeller())) {
                                     System.out.println("found!");
                                     product.decreaseQuantity();
                                 }

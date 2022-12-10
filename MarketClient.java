@@ -37,6 +37,7 @@ public class MarketClient {
         } else {
             System.out.println("\nWelcome " + user.getEmail());
         }
+
         if (user instanceof Buyers) {
             Buyers buyer = new Buyers(user);
             buyer.setupSocket(ois, oos);
@@ -46,6 +47,5 @@ public class MarketClient {
             seller.setupSocket(ois, oos);
             seller.choices(seller, market, input);
         }
-        Market.updateListings();
     }
 }

@@ -19,6 +19,7 @@ public class Buyers extends User {
     private ArrayList<Product> allProducts;
     private ObjectOutputStream oos;
     private ArrayList<Product> shoppingCart = new ArrayList<>();
+    public ArrayList<Store> market;
 
     /**
      * A method that creates a buyer given their information
@@ -49,9 +50,11 @@ public class Buyers extends User {
     public void setupCart() {
         try {
             oos.writeObject("bCart");
+            oos.flush();
             ArrayList<String> cart = null;
             try {
                 oos.writeObject(super.getEmail());
+                oos.flush();
                 cart = (ArrayList<String>) ois.readObject();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -79,13 +82,16 @@ public class Buyers extends User {
     public void saveCart() {
         try {
             oos.writeObject("bSave");
+            oos.flush();
             //writer.write(super.getEmail() + "Cart.txt");
             ArrayList<String> stringCart = new ArrayList<>();
             for (Product p : shoppingCart) {
                 stringCart.add(p.toString());
             }
             oos.writeObject(stringCart);
+            oos.flush();
             oos.writeObject(super.getEmail() + "Cart.txt");
+            oos.flush();
         } catch (IOException e) {
             System.out.println("Cannot write object");
             e.printStackTrace();
@@ -119,7 +125,9 @@ public class Buyers extends User {
     private void clearCart() {
         try {
             oos.writeObject("bClear");
+            oos.flush();
             oos.writeObject(super.getEmail() + "Cart.txt");
+            oos.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -134,6 +142,7 @@ public class Buyers extends User {
     private void addToFile(ArrayList<Product> cart) {
         try {
             oos.writeObject("bAdd");
+            oos.flush();
             ArrayList<String> newPurchases = new ArrayList<>();
             for (Product p : cart) {
                 newPurchases.add(p.getName() + "," + p.getSeller() + "\n");
@@ -143,9 +152,13 @@ public class Buyers extends User {
                 newAllPurchases.add(p.getName() + "," + p.getSeller() + "," + super.getEmail() + "," + p.getPrice() + "\n");
             }
             oos.writeObject((ArrayList<String>) newPurchases);
+            oos.flush();
             oos.writeObject((ArrayList<String>) newAllPurchases);
+            oos.flush();
             oos.writeObject(super.getEmail() + ".txt");
+            oos.flush();
             oos.writeObject("AllPurchases.txt");
+            oos.flush();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -160,10 +173,11 @@ public class Buyers extends User {
      * @param market The arraylist of stores that is the market
      * @param input  The scanner that is used for user input
      */
-    public void choices(Buyers buyer, ArrayList<Store> market, Scanner input) {
+    public synchronized void choices(Buyers buyer, ArrayList<Store> market, Scanner input) {
         setupCart();
         Scanner scanner = new Scanner(System.in);
         int choice = -1;
+        this.market = market;
         allProducts = getAllProducts(market);
         do {
             refresh();
@@ -342,8 +356,10 @@ public class Buyers extends User {
                     ArrayList<String> history = null;
                     try {
                         oos.writeObject("bHistory");
+                        oos.flush();
                         System.out.println("Purchase history:");
                         oos.writeObject(super.getEmail() + ".txt");
+                        oos.flush();
                         history = (ArrayList<String>) ois.readObject();
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -437,7 +453,9 @@ public class Buyers extends User {
                     saveCart();
                     try {
                         oos.writeObject("bExit");
+                        oos.flush();
                         oos.writeObject(market);
+                        oos.flush();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -485,6 +503,7 @@ public class Buyers extends User {
         ArrayList<String> purchases = null;
         try {
             oos.writeObject("bStats");
+            oos.flush();
             purchases = (ArrayList<String>) ois.readObject();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -551,17 +570,35 @@ public class Buyers extends User {
         }
     }
 
-    public void refresh() {
+    public synchronized void refresh() {
         try {
             allProducts.clear();
             oos.writeObject("bRefresh");
+            oos.flush();
             while (true) {
                 String s = (String) ois.readObject();
                 if (s == null)
                     break;
                 allProducts.add(new Product(s));
             }
+            oos.writeObject("bToFile");
+            oos.flush();
+            for (Store s : market) {
+                oos.writeObject("new,seller");;
+                oos.flush();
+                System.out.println(s.toString());
+                oos.writeObject(s.getSellerName());
+                for (Product tempProduct : s.getProducts()) {
+                    System.out.println(tempProduct.toString());
+                    oos.writeObject(tempProduct.toString());;
+                    oos.flush();
+                }
+                oos.flush();
+            }
+            oos.writeObject(null);
+            oos.flush();
             oos.writeObject("close");
+            oos.flush();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
