@@ -86,7 +86,7 @@ public class Sellers extends User {
     /**
      * Method that prints the different choices the seller can do
      */
-    public synchronized void choices(Sellers seller, ArrayList<Store> market, Scanner input) {
+    public void choices(Sellers seller, ArrayList<Store> market, Scanner input) {
         Scanner scanner = new Scanner(System.in);
         int choice = -1;
         do {
@@ -725,7 +725,7 @@ public class Sellers extends User {
         }*/
     }
 
-    public synchronized void update() {
+    public void update() {
         store.setProducts(productList);
         try {
             ArrayList<Product> storeProducts = store.getProducts();
