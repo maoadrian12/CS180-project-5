@@ -438,6 +438,7 @@ public class Buyers extends User {
                     try {
                         oos.writeObject("bExit");
                         oos.writeObject(market);
+                        oos.writeObject("bClose");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

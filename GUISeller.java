@@ -441,7 +441,6 @@ public class GUISeller extends GUIUser {
         if (numItems == 0) {
             //System.out.println("Nothing in carts!");
             JOptionPane.showMessageDialog(null, "Nothing in carts!", "View Carts", JOptionPane.ERROR_MESSAGE);
-
         }
     }
 

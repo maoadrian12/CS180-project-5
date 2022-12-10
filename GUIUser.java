@@ -59,7 +59,6 @@ public class GUIUser {
         f.createNewFile();
         FileReader fr = new FileReader(f);
         BufferedReader bfr = new BufferedReader(fr);
-
         String s;
         while ((s = bfr.readLine()) != null)
             allUsers.add(s);
@@ -252,7 +251,6 @@ public class GUIUser {
         ArrayList<String> accounts = new ArrayList<>();
         File f = new File("UserAccounts.txt");
         if (!f.exists() || f.isDirectory()) {
-            System.out.println("Error deleting account, try closing and rerunning the program.");
             JOptionPane.showMessageDialog(null, "Error deleting account, try closing and rerunning the program.", "Error",
                     JOptionPane.ERROR_MESSAGE);
         } else {
@@ -283,7 +281,6 @@ public class GUIUser {
                 fw.write(s + "\n");
             }
             fw.close();
-            System.out.println("Account deleted, terminating program...");
             JOptionPane.showMessageDialog(null, "Account deleted, terminating program...", "Account",
                     JOptionPane.INFORMATION_MESSAGE);
         } catch (IOException e) {

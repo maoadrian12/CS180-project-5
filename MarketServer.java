@@ -124,6 +124,12 @@ public class MarketServer implements Runnable {
                     case "sCart":
                         oos.writeObject(getList("UserAccounts.txt"));
                         oos.writeObject(getList((String) reader.readObject()));
+                        while (true) {
+                            String cartName = (String) reader.readObject();
+                            if (cartName == null)
+                                break;
+                            oos.writeObject(getList(cartName));
+                        }
                         break;
                     case "sImport":
                         oos.writeObject(getList((String) reader.readObject()));
