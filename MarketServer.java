@@ -42,7 +42,7 @@ public class MarketServer implements Runnable {
                             String accountString = (String) reader.readObject();
                             if (accountString == null)
                                 break;
-                            accounts.add(s);
+                            accounts.add(accountString);
                         }
                         writeToFile(accounts, "UserAccounts.txt");
                         break;
@@ -160,7 +160,6 @@ public class MarketServer implements Runnable {
                         System.out.println("Error with that input");
                         break;
                 }
-
             }
         } catch (SocketException e) {
             System.out.println("Socket " + socket + " has disconnected.");
