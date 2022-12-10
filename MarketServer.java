@@ -26,7 +26,11 @@ public class MarketServer implements Runnable {
             Market mkt = new Market();
             ArrayList<Store> market = mkt.fromFile(f);  //Out of bounds error on this line
             oos.writeObject(market);
+<<<<<<< HEAD
 
+=======
+            oos.flush();
+>>>>>>> 303c78c56c8a75673e187ada2f22a9c1f043d113
             while (true) {
                 String s = (String) reader.readObject();
                 //System.out.println(s);
@@ -90,10 +94,12 @@ public class MarketServer implements Runnable {
                         break;
                     case "setup":
                         oos.writeObject(market);
+                        oos.flush();
                         break;
                     case "bCart":
                         String email = (String) reader.readObject();
                         oos.writeObject(getList(email + "Cart.txt"));
+                        oos.flush();
                         break;
                     case "bSave":
                         ArrayList<String> cart = (ArrayList<String>) reader.readObject();
@@ -117,18 +123,22 @@ public class MarketServer implements Runnable {
                     case "bHistory":
                         String history = (String) reader.readObject();
                         oos.writeObject(getList(history));
+                        oos.flush();
                         break;
                     case "bStats":
                         oos.writeObject(getList("AllPurchases.txt"));
+                        oos.flush();
                         break;
                     case "bRefresh":
                         ArrayList<Store> market2 = mkt.fromFile(new File("Listings.txt"));
                         for (Store store : market2) {
                             for (Product p : store.getProducts()) {
                                 oos.writeObject(p.toString());
+                                oos.flush();
                             }
                         }
                         oos.writeObject(null);
+                        oos.flush();
                         mkt.setMarket(market2);
                         mkt.toFile();
                         mkt.fromFile(new File("Listings.txt"));
@@ -139,18 +149,40 @@ public class MarketServer implements Runnable {
                         market3.setMarket(buyerMarket);
                         market3.toFile();
                         break;
+                    case "bToFile":
+                        ArrayList<Store> tempMarket = new ArrayList<>();
+                        int index = -1;
+                        while (true) {
+                            String tempString = (String) reader.readObject();
+                            if (tempString == null)
+                                break;
+                            if (tempString.equals("new,seller")) {
+                                tempMarket.add(new Store((String)reader.readObject()));
+                                index++;
+                            } else {
+                                tempMarket.get(index).addProduct(new Product(tempString));
+                            }
+                        }
+                        Market market4 = new Market();
+                        market4.setMarket(tempMarket);
+                        market4.toFile();
+                        break;
                     case "file":
                         mkt.toFile();
                         break;
                     case "sSetup":
                         oos.writeObject(getList((String) reader.readObject()));
+                        oos.flush();
                         break;
                     case "sCart":
                         oos.writeObject(getList("UserAccounts.txt"));
+                        oos.flush();
                         oos.writeObject(getList((String) reader.readObject()));
+                        oos.flush();
                         break;
                     case "sImport":
                         oos.writeObject(getList((String) reader.readObject()));
+                        oos.flush();
                         break;
                     case "sExport":
                         String nameOfFile = (String) reader.readObject();
@@ -159,6 +191,7 @@ public class MarketServer implements Runnable {
                         break;
                     case "sStats":
                         oos.writeObject(getList("AllPurchases.txt"));
+                        oos.flush();
                         break;
                     case "sPrint":
                         String sellerName = (String) reader.readObject();
@@ -191,7 +224,6 @@ public class MarketServer implements Runnable {
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-
     }
 
     public static ArrayList<String> getList(String name) {
