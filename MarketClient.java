@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.net.*;
 import java.io.*;
 import java.util.*;
@@ -7,37 +8,34 @@ public class MarketClient {
         Scanner input = new Scanner(System.in);
         int port = -1;
         do {
-            System.out.println("Port?");
+            String portString = JOptionPane.showInputDialog(null, "Port?", "Use 1234",
+                    JOptionPane.INFORMATION_MESSAGE);
             try {
-                port = input.nextInt();
-            } catch (InputMismatchException e) {
-                System.out.println("Please enter an integer.");
+                port = Integer.parseInt(portString);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Please enter an integer.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         } while (port == -1);
-        input.nextLine();
-        System.out.println("Host?");
-        String host = input.nextLine();
+        String host = JOptionPane.showInputDialog(null, "Host?", "host", JOptionPane.INFORMATION_MESSAGE);
         Socket socket = null;
         try {
             socket = new Socket(host, port);
         } catch (Exception e) {
-            System.out.println("Connection unsuccessful, terminating program...");
+            JOptionPane.showMessageDialog(null,"Connection unsuccessful, terminating program...",
+                    "Error", JOptionPane.ERROR_MESSAGE);
             System.exit(1);
         }
         ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
         ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
         ArrayList<Store> market = (ArrayList<Store>) ois.readObject();
-        for (Store s : market) {
-            System.out.println(s);
-            //THIS IS FOR DEBUGGING
-        }
         User user = User.prompt(ois, oos); // returns user object
         if (user.getEmail().isEmpty() || user.getEmail().isBlank()) {
-            System.out.println("Goodbye.");
+            JOptionPane.showMessageDialog(null, "Goodbye", "bye", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            System.out.println("\nWelcome " + user.getEmail());
+            JOptionPane.showMessageDialog(null, "Welcome " + user.getEmail(),
+                    "Welcome!", JOptionPane.INFORMATION_MESSAGE);
         }
-
         if (user instanceof Buyers) {
             Buyers buyer = new Buyers(user);
             buyer.setupSocket(ois, oos);
