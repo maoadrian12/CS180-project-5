@@ -100,6 +100,13 @@ public class Buyers extends User {
     private void addToCart(Product p) {
         if (p.getQuantity() > 0) {
             shoppingCart.add(p);
+            try {
+                oos.writeObject("bBuy");
+                oos.writeObject(p.toString());
+                System.out.println(p.toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             p.decreaseQuantity();
         } else {
             System.out.println("Out of stock!");
@@ -298,8 +305,8 @@ public class Buyers extends User {
                     System.out.println("What item do you want to add to your cart?");
                     String item = input.nextLine();
                     boolean find = false;
-                    for (Store m : market) {
-                        for (Product p : m.getProducts()) {
+                    //for (Store m : market) {
+                        for (Product p : allProducts) {
                             if (p.getName().equals(item)) {
                                 int num = -1;
                                 do {
@@ -324,7 +331,7 @@ public class Buyers extends User {
                                 find = true;
                             }
                         }
-                    }
+                    //}
                     if (!find) {
                         System.out.println("No item matching that name!");
                     } else {
@@ -423,7 +430,7 @@ public class Buyers extends User {
                     statistics(input);
                     break;
                 case 10:
-                    super.deleteAccount();
+                    super.deleteAccount(ois, oos);
                     choice = 11;
                     break;
                 case 11:

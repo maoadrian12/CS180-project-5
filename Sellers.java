@@ -284,7 +284,7 @@ public class Sellers extends User {
                     } while (sent);
                     break;
                 case 8:
-                    super.deleteAccount();
+                    super.deleteAccount(ois, oos);
                     productList = new ArrayList<>();
                     /*store.setProducts(productList);
                     store.printToFile(new File(super.getEmail() + ".txt"));*/
