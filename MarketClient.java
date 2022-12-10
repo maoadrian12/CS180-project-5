@@ -31,12 +31,14 @@ public class MarketClient {
             System.out.println(s);
             //THIS IS FOR DEBUGGING
         }
-        User user = User.prompt(); // returns user object
+
+        User user = User.prompt(ois, oos); // returns user object
         if (user.getEmail().isEmpty() || user.getEmail().isBlank()) {
             System.out.println("Goodbye.");
         } else {
             System.out.println("\nWelcome " + user.getEmail());
         }
+
         if (user instanceof Buyers) {
             Buyers buyer = new Buyers(user);
             buyer.setupSocket(ois, oos);

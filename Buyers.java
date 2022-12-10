@@ -153,7 +153,7 @@ public class Buyers extends User {
      * @param market The arraylist of stores that is the market
      * @param input  The scanner that is used for user input
      */
-    public void choices(Buyers buyer, ArrayList<Store> market, Scanner input) {
+    public void choices(Buyers buyer, ArrayList<Store> market, Scanner input) throws IOException {
         setupCart();
         Scanner scanner = new Scanner(System.in);
         int choice = -1;

@@ -13,8 +13,8 @@ public class User {
     private String email;
     private String password;
     private String buyOrSell;
-
-
+    private static ObjectInputStream ois;
+    private static ObjectOutputStream oos;
 
     public User(String email, String password) {
         this.email = email;
@@ -55,21 +55,22 @@ public class User {
     }
 
     public static void loadUsers() throws IOException {
-        File f = new File("UserAccounts.txt");
-        f.createNewFile();
-        FileReader fr = new FileReader(f);
-        BufferedReader bfr = new BufferedReader(fr);
-
-        String s;
-        while ((s = bfr.readLine()) != null)
-            allUsers.add(s);
+        oos.writeObject("load");
+        try {
+            allUsers = (ArrayList<String>) ois.readObject();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
-    public static User prompt() {
+    public static User prompt(ObjectInputStream uois, ObjectOutputStream uoos) {
+
+        ois = uois;
+        oos = uoos;
+
         System.out.println("Welcome to the Car Marketplace");
         Scanner scanner = new Scanner(System.in);
         int choice = -1;
-        String[] userDetails = new String[2];
 
         try {
             loadUsers();
@@ -88,7 +89,11 @@ public class User {
             if (choice == 1) {
                 return logIn();
             } else if (choice == 2) {
-                return signUp();
+                try {
+                    return signUp();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             } else {
                 System.out.println("Invalid Choice");
             }
@@ -160,9 +165,10 @@ public class User {
         }
     }
 
-    public static User signUp() {
+    public static User signUp() throws IOException {
+        oos.writeObject("signup");
+
         Scanner scanner = new Scanner(System.in);
-        File f = new File("UserAccounts.txt");
 
         String attemptedEmail = "";
         System.out.println("Sign Up\n----------------");
@@ -212,13 +218,9 @@ public class User {
 
         } while (!(buyerOrSeller.equals("buyer")) && !(buyerOrSeller.equals("seller")));
 
-        try (PrintWriter pw = new PrintWriter(new FileWriter(f, true))) {
-            f.createNewFile();
-            String s = String.format("%s,%s,%s", attemptedEmail, attemptedPassword, buyerOrSeller);
-            pw.println(s);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        oos.writeObject(attemptedEmail);
+        oos.writeObject(attemptedPassword);
+        oos.writeObject(buyerOrSeller);
 
         String[] userData = new String[]{attemptedEmail, attemptedPassword, buyerOrSeller};
 
@@ -234,42 +236,18 @@ public class User {
 
     }
 
-    public void deleteAccount() {
+    public void deleteAccount() throws IOException {
+        oos.writeObject("delete");
+
         ArrayList<String> accounts = new ArrayList<>();
-        File f = new File("UserAccounts.txt");
-        if (!f.exists() || f.isDirectory()) {
-            System.out.println("Error deleting account, try closing and rerunning the program.");
-        } else {
-            try {
-                FileReader fr = new FileReader(f);
-                BufferedReader br = new BufferedReader(fr);
-                while (true) {
-                    String s = br.readLine();
-                    if (s == null) {
-                        break;
-                    }
-                    accounts.add(s);
-                }
-            } catch (IOException e) {
-                System.out.println("Error deleting account, try closing and rerunning the program.");
-            }
-        }
         for (int i = 0; i < accounts.size(); i++) {
             String s = accounts.get(i);
             if (s.substring(0, s.indexOf(',')).equals(getEmail())) {
                 accounts.remove(i);
             }
         }
-        try {
-            FileWriter fw = new FileWriter(f);
-            for (String s : accounts) {
-                fw.write(s + "\n");
-            }
-            fw.close();
-            System.out.println("Account deleted, terminating program...");
-        } catch (IOException e) {
-            System.out.println("Error deleting account, try closing and rerunning the program.");
-        }
+
+        oos.writeObject(accounts);
     }
 
     public String toString() {

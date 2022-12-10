@@ -22,12 +22,72 @@ public class MarketServer implements Runnable {
         System.out.printf("Connection received from %s\n", socket);
         try {
             File f = new File("Listings.txt");
+            File userFile = new File("UserAccounts.txt");
             Market mkt = new Market();
-            ArrayList<Store> market = mkt.fromFile(f);
+            ArrayList<Store> market = mkt.fromFile(f);  //Out of bounds error on this line
             oos.writeObject(market);
+
             while (true) {
                 String s = (String) reader.readObject();
+                //System.out.println(s);
                 switch (s) {
+                    case "load":
+                        ArrayList<String> allUsers = new ArrayList<>();
+                        userFile.createNewFile();
+                        FileReader fr = new FileReader(userFile);
+                        BufferedReader bfr = new BufferedReader(fr);
+
+                        String line;
+                        while ((line = bfr.readLine()) != null)
+                            allUsers.add(line);
+
+                        oos.writeObject(allUsers);
+                        break;
+                    case "signup":
+                        String attemptedEmail = (String) reader.readObject();
+                        String attemptedPassword = (String) reader.readObject();
+                        String buyerOrSeller = (String) reader.readObject();
+
+                        try (PrintWriter pw = new PrintWriter(new FileWriter(f, true))) {
+                            userFile.createNewFile();
+                            String userData = String.format("%s,%s,%s", attemptedEmail, attemptedPassword, buyerOrSeller);
+                            pw.println(userData);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    case "delete":
+                        ArrayList<String> accounts = new ArrayList<>();
+                        if (!userFile.exists() || userFile.isDirectory()) {
+                            System.out.println("Error deleting account, try closing and rerunning the program.");
+                        } else {
+                            try {
+                                FileReader delFr = new FileReader(userFile);
+                                BufferedReader br = new BufferedReader(delFr);
+                                while (true) {
+                                    String s1 = br.readLine();
+                                    if (s1 == null) {
+                                        break;
+                                    }
+                                    accounts.add(s1);
+                                }
+                            } catch (IOException e) {
+                                System.out.println("Error deleting account, try closing and rerunning the program.");
+                            }
+                        }
+                        //bring back accounts from users
+                        accounts = (ArrayList<String>) reader.readObject();
+                        try {
+                            FileWriter fw = new FileWriter(f);
+                            for (String s1 : accounts) {
+                                fw.write(s + "\n");
+                            }
+                            fw.close();
+                            System.out.println("Account deleted, terminating program...");
+                        } catch (IOException e) {
+                            System.out.println("Error deleting account, try closing and rerunning the program.");
+                        }
+                        break;
                     case "setup":
                         oos.writeObject(market);
                         break;

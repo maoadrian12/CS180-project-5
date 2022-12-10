@@ -86,7 +86,7 @@ public class Sellers extends User {
     /**
      * Method that prints the different choices the seller can do
      */
-    public void choices(Sellers seller, ArrayList<Store> market, Scanner input) {
+    public void choices(Sellers seller, ArrayList<Store> market, Scanner input) throws IOException {
         Scanner scanner = new Scanner(System.in);
         int choice = -1;
         do {
