@@ -8,7 +8,7 @@ import java.util.*;
  * @version 11.13.22
  */
 public class Market {
-    private ArrayList<Store> market = new ArrayList<Store>();
+    private static ArrayList<Store> market = new ArrayList<Store>();
 
     /**
      * This method prints the given market to a file.
@@ -132,25 +132,28 @@ public class Market {
     /*
      * The main method that starts the entire program.
      * @param args User arguments(useless)
-
+*/
     public static void main(String[] args) {
-        fromFile(new File("Listings.txt"));
-        User user = User.prompt(); // returns user object
+        Market mkt = new Market();
+        mkt.fromFile(new File("Listings.txt"));
+        ArrayList<Store> market2 = new ArrayList<>();
+        GUIUser user = GUIUser.prompt(); // returns user object
         if (user.getEmail().isEmpty() || user.getEmail().isBlank()) {
-            System.out.println("Goodbye.");
+
         } else {
             System.out.println("\nWelcome " + user.getEmail());
         }
         Scanner input = new Scanner(System.in);
-        if (user instanceof Buyers) {
-            Buyers buyer = new Buyers(user);
+        if (false) {
+           // Buyers buyer = new Buyers(user);
 
-            buyer.choices(buyer, market, input);
-        } else if (user instanceof Sellers) {
-            Sellers seller = new Sellers(user);
+            //buyer.choices(buyer, market, input);
+        } else if (user instanceof GUISeller) {
+            GUISeller seller = new GUISeller(user);
+            //todo MAKE MARKET NON STATIC(testing right now)
             seller.choices(seller, market, input);
         }
         updateListings();
     }
-    */
+
 }
