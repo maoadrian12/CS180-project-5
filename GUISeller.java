@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.nio.Buffer;
 import java.nio.file.attribute.UserDefinedFileAttributeView;
 import java.util.ArrayList;
@@ -145,13 +146,13 @@ public class GUISeller extends GUIUser {
                         boolean sent = false;
                         String[] editChoices = new String[productList.size()];
                         for (int i = 0; i < editChoices.length; i++) {
-                            editChoices[i] = String.valueOf(i);
+                            editChoices[i] = productList.get(i).getName();
                         }
                         do {
-                            String editAnswer = (String) JOptionPane.showInputDialog(null, "Which product would you like to edit?(answer -1 to cancel)",
-                                    "Select product", JOptionPane.INFORMATION_MESSAGE, null, editChoices, editChoices[0]);
+                            String editAnswer = (String) JOptionPane.showInputDialog(null, "Which product would you like to edit?",
+                                    "Edit product", JOptionPane.INFORMATION_MESSAGE, null, editChoices, editChoices[0]);
                             try {
-                                int answer = Integer.parseInt(editAnswer);
+                                int answer = Arrays.asList(editChoices).indexOf(editAnswer);
                                 if (answer == -1) {
                                     sent = true;
                                 } else if (answer > productList.size() - 1) {
@@ -221,13 +222,13 @@ public class GUISeller extends GUIUser {
                         int num = -2;
                         String[] deleteChoices = new String[productList.size()];
                         for (int i = 0; i < deleteChoices.length; i++) {
-                            deleteChoices[i] = String.valueOf(i);
+                            deleteChoices[i] = productList.get(i).getName();
                         }
                         do {
                             String deleteAnswer = (String) JOptionPane.showInputDialog(null, "Which product would you like to edit?(answer -1 to cancel)",
-                                    "Select product", JOptionPane.INFORMATION_MESSAGE, null, deleteChoices, deleteChoices[0]);
+                                    "Delete product", JOptionPane.INFORMATION_MESSAGE, null, deleteChoices, deleteChoices[0]);
                             try {
-                                num = Integer.parseInt(deleteAnswer);
+                                num = Arrays.asList(deleteChoices).indexOf(deleteAnswer);
                                 if (num == -1) {
                                     JOptionPane.showMessageDialog(null, "Cancelling...",
                                             "Delete Product", JOptionPane.INFORMATION_MESSAGE);
@@ -248,10 +249,14 @@ public class GUISeller extends GUIUser {
                         update();
                         break;
                     case 4:
+                        String[] products = new String[productList.size()];
                         if (productList != null && productList.size() != 0) {
-                            for (Product product : productList) {
-                                System.out.println(product.getListing());
+                            for (int i = 0; i < productList.size(); i++) {
+                                String s = String.format("Name: %s | Description: %s | Quantity: %d | Price: %.2f",
+                                        productList.get(i).getName(), productList.get(i).getDesc(), productList.get(i).getQuantity(), productList.get(i).getPrice());
+                                products[i] = s;
                             }
+                            JOptionPane.showMessageDialog(null, products, "View Products", JOptionPane.INFORMATION_MESSAGE);
                         } else {
                             JOptionPane.showMessageDialog(null, "No current products",
                                     "Delete Product", JOptionPane.ERROR_MESSAGE);
@@ -265,17 +270,20 @@ public class GUISeller extends GUIUser {
                         break;
                     case 7:
                         sent = true;
+                        String[] iORe = new String[] {"Import", "Export"};
                         do {
-                            System.out.println("Import(i) or Export(e)?");
-                            String answer = input.nextLine();
-                            if (answer.equals("i")) {
+                            //System.out.println("Import(i) or Export(e)?");
+                            String answer = (String) JOptionPane.showInputDialog(null, "Import or Export?",
+                                    "Import/Export", JOptionPane.QUESTION_MESSAGE,
+                                    null, iORe, iORe[0]);
+                            if (answer.equals("Import")) {
                                 im(input);
                                 sent = false;
-                            } else if (answer.equals("e")) {
+                            } else if (answer.equals("Export")) {
                                 export();
                                 sent = false;
                             } else {
-                                System.out.println("Please enter either i or e.");
+                                JOptionPane.showMessageDialog(null, "How", "Import/Export", JOptionPane.ERROR_MESSAGE);
                             }
                         } while (sent);
                         update();
@@ -294,7 +302,9 @@ public class GUISeller extends GUIUser {
                         Market.updateListings();
                         break;
                     default:
-                        System.out.println("Enter Valid Number");
+                        //System.out.println("Enter Valid Number");
+                        JOptionPane.showMessageDialog(null, "Enter A Valid Number",
+                                "Choice?", JOptionPane.QUESTION_MESSAGE);
                         break;
                 }
             } while (choice != 9);
@@ -390,6 +400,7 @@ public class GUISeller extends GUIUser {
      */
     public void viewCarts() {
         File f = new File("UserAccounts.txt");
+        ArrayList<String> productCart = new ArrayList<>();
         int numItems = 0;
         try {
             FileReader fr = new FileReader(f);
@@ -415,17 +426,22 @@ public class GUISeller extends GUIUser {
                             }
                             Product p  = new Product(str);
                             numItems++;
-                            System.out.printf("\t%s, sold by %s, priced at %.2f\n",
-                                    p.getName(), p.getSeller(), p.getPrice());
+                            //System.out.printf("\t%s, sold by %s, priced at %.2f\n", p.getName(), p.getSeller(), p.getPrice());
+                            String desc = String.format("%s, sold by %s, priced at %.2f", p.getName(), p.getSeller(), p.getPrice());
+                            productCart.add(desc);
                         }
+                        JOptionPane.showMessageDialog(null, productCart.toArray(), "View Cart", JOptionPane.INFORMATION_MESSAGE);
                     }
                 }
             }
         } catch (IOException e) {
-            System.out.println("Nothing in carts!");
+            //System.out.println("Nothing in carts!");
+            JOptionPane.showMessageDialog(null, "Nothing in carts!", "View Carts", JOptionPane.ERROR_MESSAGE);
         }
         if (numItems == 0) {
-            System.out.println("Nothing in carts!");
+            //System.out.println("Nothing in carts!");
+            JOptionPane.showMessageDialog(null, "Nothing in carts!", "View Carts", JOptionPane.ERROR_MESSAGE);
+
         }
     }
 
@@ -620,6 +636,10 @@ public class GUISeller extends GUIUser {
      */
     public void export() {
         System.out.println("Exporting to " + super.getEmail() + ".csv...");
+        String exportName = "Exporting to " + super.getEmail() + ".csv...";
+        JOptionPane.showMessageDialog(null, exportName,
+                "Export Product", JOptionPane.INFORMATION_MESSAGE);
+
         File f = new File(super.getEmail() + ".csv");
         try {
             FileWriter fw = new FileWriter(f);
