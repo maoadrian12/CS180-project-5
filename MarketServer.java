@@ -203,7 +203,7 @@ public class MarketServer implements Runnable {
                 fw = new FileWriter(f, true);
             }
             for (String str : s) {
-                fw.write(str + "\n");
+                fw.write(str);
             }
             fw.close();
             return true;
@@ -224,7 +224,7 @@ public class MarketServer implements Runnable {
                 fw = new FileWriter(f, false);
             }
             for (String str : s) {
-                fw.write(str + "\n");
+                fw.write(str);
             }
             fw.close();
         } catch (IOException e) {
