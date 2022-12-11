@@ -103,7 +103,7 @@ public class Sellers extends User {
                     choice = Integer.parseInt(answer.substring(0, 1));
                     break;
                 } catch (InputMismatchException e) {
-                    JOptionPane.showMessageDialog(null, "Please enter an integer.",
+                    JOptionPane.showMessageDialog(null, "Please select a choice.",
                             "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } while (true);
