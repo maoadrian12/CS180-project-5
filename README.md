@@ -17,7 +17,7 @@ Made by CS 180 Lab L05 Group 3 Brennan Johnson, Adrian Mao, Alvin Lee, Raunak Ch
 
 ## Installation
 
-Copy the classes into an IDE of your choosing. After compiling the classes, run the Market class to run the program.
+Copy the classes into an IDE of your choosing. After compiling the classes, run the MarketServer class, then run the MarketClient class, and enter 1234 for port number and "localhost" for host.
 
 ## MarketServer.java
 
