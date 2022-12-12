@@ -19,11 +19,13 @@ Made by CS 180 Lab L05 Group 3 Brennan Johnson, Adrian Mao, Alvin Lee, Raunak Ch
 
 Copy the classes into an IDE of your choosing. After compiling the classes, run the Market class to run the program.
 
-## Market.java
+## MarketServer.java
 
-The Market class is the class that contains the main method to the marketplace and runs the program. This is the class to be ran in the terminal to run the program. Some methods pertaining to file I/O not specific to any of the other classes are located here as well. The market class calls a lot of methods written in other classes as well as distributes the processing for said methods elsewhere to keep the main one clean.
+The MarketServer class is the class that holds the server for the program. This class is to be ran in the terminal first before the client class is ran. This class holds methods related to managing connections to the client as well as some threading. 
 
-Testing Info: Listings.txt was present/not present, making sure Listings.txt would have the correct info, making sure Listings.txt would update every time the program closed, etc... Also tested inputs in the login sections: whether people could have blank usernames, and whether incorrect inputs could be handled well.
+## MarketClient.java
+
+The MarketClient class is the class that contains the main method to the marketplace and runs the program. This is the class to be ran in the terminal after running the server class to run the program. Some methods pertaining to file I/O not specific to any of the other classes are located here as well. This class calls a lot of methods written in other classes as well as distributes the processing for said methods elsewhere to keep the main one clean.
 
 ## User.java
 
