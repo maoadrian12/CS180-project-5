@@ -104,13 +104,17 @@ public class Buyers extends User {
             try {
                 oos.writeObject("bBuy");
                 oos.writeObject(p.toString() + "\n");
-                System.out.println(p.toString());
+                //System.out.println(p.toString());
+                JOptionPane.showMessageDialog(null, "Added successfully!",
+                        "Purchase Items", JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException e) {
                 e.printStackTrace();
             }
             p.decreaseQuantity();
         } else {
-            System.out.println("Out of stock!");
+            //System.out.println("Out of stock!");
+            JOptionPane.showMessageDialog(null, "Out of Stock!",
+                    "Purchase Item", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
@@ -407,8 +411,7 @@ public class Buyers extends User {
                                             addToCart(p);
                                         }
                                         //System.out.println("Added!");
-                                        JOptionPane.showMessageDialog(null, "Added successfully!",
-                                                "Purchase Items", JOptionPane.INFORMATION_MESSAGE);
+
                                     }
 
                                 } while (num == -1);
