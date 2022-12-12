@@ -3,6 +3,10 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 
+/**
+ * @author Adrian Mao, Raunak Chakrabauty, Alvin Lee, Brennan Johnson, Vinathi Muthyala
+ * @version 1
+ */
 public class MarketClient {
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         Scanner input = new Scanner(System.in);
@@ -22,7 +26,7 @@ public class MarketClient {
         try {
             socket = new Socket(host, port);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null,"Connection unsuccessful, terminating program...",
+            JOptionPane.showMessageDialog(null, "Connection unsuccessful, terminating program...",
                     "Error", JOptionPane.ERROR_MESSAGE);
             System.exit(1);
         }

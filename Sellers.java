@@ -78,9 +78,9 @@ public class Sellers extends User {
         }*/
     }
 
-    public void setupSocket(ObjectInputStream ois, ObjectOutputStream oos) {
-        this.ois = ois;
-        this.oos = oos;
+    public void setupSocket(ObjectInputStream objectIn, ObjectOutputStream objectOut) {
+        this.ois = objectIn;
+        this.oos = objectOut;
         setupInfo(super.getEmail());
     }
 
@@ -95,7 +95,8 @@ public class Sellers extends User {
                 update();
                 do {
                     String[] choices = {"1. Create Product", "2. Edit Product", "3. Delete Product",
-                            "4. See products", "5. See sale statistics", "6. View carts", "7. Import/Export products",
+                            "4. See products", "5. See sale statistics", "6. View carts",
+                            "7. Import/Export products",
                             "8. Delete account", "9. Exit the application"};
                     try {
                         String answer = (String) (JOptionPane.showInputDialog(null, "Seller Options",
@@ -132,11 +133,13 @@ public class Sellers extends User {
                         double p = -1;
                         do {
                             try {
-                                q = Integer.parseInt(JOptionPane.showInputDialog(null, "What is the quantity of the product?",
+                                q = Integer.parseInt(JOptionPane.showInputDialog(null,
+                                        "What is the quantity of the product?",
                                         "Create Product", JOptionPane.QUESTION_MESSAGE));
                                 if (q < 0) {
                                     q = -1;
-                                    JOptionPane.showMessageDialog(null, "Please enter an integer greater than zero.",
+                                    JOptionPane.showMessageDialog(null,
+                                            "Please enter an integer greater than zero.",
                                             "Create Product", JOptionPane.ERROR_MESSAGE);
                                 }
                             } catch (Exception e) {
@@ -146,11 +149,13 @@ public class Sellers extends User {
                         } while (q == -1);
                         do {
                             try {
-                                p = Double.parseDouble(JOptionPane.showInputDialog(null, "What is the price of the product?",
+                                p = Double.parseDouble(JOptionPane.showInputDialog(null,
+                                        "What is the price of the product?",
                                         "Create Product", JOptionPane.QUESTION_MESSAGE));
                                 if (p < 0) {
                                     p = -1;
-                                    JOptionPane.showMessageDialog(null, "Please enter an double greater than zero.",
+                                    JOptionPane.showMessageDialog(null,
+                                            "Please enter an double greater than zero.",
                                             "Create Product", JOptionPane.ERROR_MESSAGE);
                                 }
                             } catch (Exception e) {
@@ -167,32 +172,39 @@ public class Sellers extends User {
                             editChoices[i] = productList.get(i).getName();
                         }
                         do {
-                            String editAnswer = (String) JOptionPane.showInputDialog(null, "Which product would you like to edit?",
-                                    "Edit product", JOptionPane.INFORMATION_MESSAGE, null, editChoices, editChoices[0]);
+                            String editAnswer = (String) JOptionPane.showInputDialog(null,
+                                    "Which product would you like to edit?",
+                                    "Edit product", JOptionPane.INFORMATION_MESSAGE, null,
+                                    editChoices, editChoices[0]);
                             try {
                                 int answer = Arrays.asList(editChoices).indexOf(editAnswer);
                                 if (answer == -1) {
                                     sent = true;
                                 } else if (answer > productList.size() - 1) {
                                     JOptionPane.showMessageDialog(null,
-                                            "Please enter a number between 0 and " + (productList.size() - 1), "choices",
+                                            "Please enter a number between 0 and " +
+                                                    (productList.size() - 1), "choices",
                                             JOptionPane.INFORMATION_MESSAGE, null);
                                 } else {
                                     String name = "";
                                     do {
-                                        name = JOptionPane.showInputDialog(null, "What is the new name?",
+                                        name = JOptionPane.showInputDialog(null,
+                                                "What is the new name?",
                                                 "Edit Product", JOptionPane.QUESTION_MESSAGE);
                                         if (name.length() == 0) {
-                                            JOptionPane.showMessageDialog(null, "Please enter a name.",
+                                            JOptionPane.showMessageDialog(null,
+                                                    "Please enter a name.",
                                                     "Edit Product", JOptionPane.ERROR_MESSAGE);
                                         }
                                     } while (name.equals(""));
                                     String description = "";
                                     do {
-                                        description = JOptionPane.showInputDialog(null, "What is the new description?",
+                                        description = JOptionPane.showInputDialog(null,
+                                                "What is the new description?",
                                                 "Edit Product", JOptionPane.QUESTION_MESSAGE);
                                         if (description.length() == 0) {
-                                            JOptionPane.showMessageDialog(null, "Please enter a description.",
+                                            JOptionPane.showMessageDialog(null,
+                                                    "Please enter a description.",
                                                     "Edit Product", JOptionPane.ERROR_MESSAGE);
                                         }
                                     } while (description.equals(""));
@@ -200,29 +212,35 @@ public class Sellers extends User {
                                     double d = -1;
                                     do {
                                         try {
-                                            quantity = Integer.parseInt(JOptionPane.showInputDialog(null, "What is the new quantity?",
+                                            quantity = Integer.parseInt(JOptionPane.showInputDialog(null,
+                                                    "What is the new quantity?",
                                                     "Edit Product", JOptionPane.QUESTION_MESSAGE));
                                             if (quantity < 0) {
                                                 quantity = -1;
-                                                JOptionPane.showMessageDialog(null, "Please enter an integer greater than 0.",
+                                                JOptionPane.showMessageDialog(null,
+                                                        "Please enter an integer greater than 0.",
                                                         "Edit Product", JOptionPane.ERROR_MESSAGE);
                                             }
                                         } catch (Exception e) {
-                                            JOptionPane.showMessageDialog(null, "Please enter an integer.",
+                                            JOptionPane.showMessageDialog(null,
+                                                    "Please enter an integer.",
                                                     "Edit Product", JOptionPane.ERROR_MESSAGE);
                                         }
                                     } while (quantity == -1);
                                     do {
                                         try {
-                                            d = Double.parseDouble(JOptionPane.showInputDialog(null, "What is the new price?",
+                                            d = Double.parseDouble(JOptionPane.showInputDialog(null,
+                                                    "What is the new price?",
                                                     "Edit Product", JOptionPane.QUESTION_MESSAGE));
                                             if (d < 0) {
                                                 d = -1;
-                                                JOptionPane.showMessageDialog(null, "Please enter a double greater than 0.",
+                                                JOptionPane.showMessageDialog(null,
+                                                        "Please enter a double greater than 0.",
                                                         "Edit Product", JOptionPane.ERROR_MESSAGE);
                                             }
                                         } catch (Exception e) {
-                                            JOptionPane.showMessageDialog(null, "Please enter a double",
+                                            JOptionPane.showMessageDialog(null,
+                                                    "Please enter a double",
                                                     "Edit Product", JOptionPane.ERROR_MESSAGE);
                                         }
                                     } while (d == -1);
@@ -242,18 +260,22 @@ public class Sellers extends User {
                             deleteChoices[i] = productList.get(i).getName();
                         }
                         do {
-                            String deleteAnswer = (String) JOptionPane.showInputDialog(null, "Which product would you like to edit?(answer -1 to cancel)",
-                                    "Delete product", JOptionPane.INFORMATION_MESSAGE, null, deleteChoices, deleteChoices[0]);
+                            String deleteAnswer = (String) JOptionPane.showInputDialog(null,
+                                    "Which product would you like to edit?(answer -1 to cancel)",
+                                    "Delete product", JOptionPane.INFORMATION_MESSAGE, null,
+                                    deleteChoices, deleteChoices[0]);
                             try {
                                 num = Arrays.asList(deleteChoices).indexOf(deleteAnswer);
                                 if (num == -1) {
                                     JOptionPane.showMessageDialog(null, "Cancelling...",
                                             "Delete Product", JOptionPane.INFORMATION_MESSAGE);
                                 } else if (num < 0) {
-                                    JOptionPane.showMessageDialog(null, "Please enter an integer greater than 0.",
+                                    JOptionPane.showMessageDialog(null,
+                                            "Please enter an integer greater than 0.",
                                             "Delete Product", JOptionPane.ERROR_MESSAGE);
                                 } else if (num > (productList.size() - 1)) {
-                                    JOptionPane.showMessageDialog(null, "Please enter an integer between 0 and " + (productList.size() - 1),
+                                    JOptionPane.showMessageDialog(null,
+                                            "Please enter an integer between 0 and " + (productList.size() - 1),
                                             "Delete Product", JOptionPane.ERROR_MESSAGE);
                                 } else {
                                     deleteProduct(productList.get(num));
@@ -269,10 +291,12 @@ public class Sellers extends User {
                         if (productList != null && productList.size() != 0) {
                             for (int i = 0; i < productList.size(); i++) {
                                 String s = String.format("Name: %s | Description: %s | Quantity: %d | Price: %.2f",
-                                        productList.get(i).getName(), productList.get(i).getDesc(), productList.get(i).getQuantity(), productList.get(i).getPrice());
+                                        productList.get(i).getName(), productList.get(i).getDesc(),
+                                        productList.get(i).getQuantity(), productList.get(i).getPrice());
                                 products[i] = s;
                             }
-                            JOptionPane.showMessageDialog(null, products, "View Products", JOptionPane.INFORMATION_MESSAGE);
+                            JOptionPane.showMessageDialog(null, products, "View Products",
+                                    JOptionPane.INFORMATION_MESSAGE);
                         } else {
                             JOptionPane.showMessageDialog(null, "No current products",
                                     "Delete Product", JOptionPane.ERROR_MESSAGE);
@@ -289,7 +313,8 @@ public class Sellers extends User {
                         String[] iORe = new String[]{"Import", "Export"};
                         do {
                             //System.out.println("Import(i) or Export(e)?");
-                            String answer = (String) JOptionPane.showInputDialog(null, "Import or Export?",
+                            String answer = (String) JOptionPane.showInputDialog(null,
+                                    "Import or Export?",
                                     "Import/Export", JOptionPane.QUESTION_MESSAGE,
                                     null, iORe, iORe[0]);
                             if (answer.equals("Import")) {
@@ -299,7 +324,8 @@ public class Sellers extends User {
                                 export();
                                 sent = false;
                             } else {
-                                JOptionPane.showMessageDialog(null, "How", "Import/Export", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(null, "How", "Import/Export",
+                                        JOptionPane.ERROR_MESSAGE);
                             }
                         } while (sent);
                         break;
@@ -441,22 +467,26 @@ public class Sellers extends User {
                         for (String str : carts) {
                             Product p = new Product(str);
                             numItems++;
-                            String desc = String.format("%s, sold by %s, priced at %.2f", p.getName(), p.getSeller(), p.getPrice());
+                            String desc = String.format("%s, sold by %s, priced at %.2f",
+                                    p.getName(), p.getSeller(), p.getPrice());
                             productCart.add(desc);
                         }
-                        JOptionPane.showMessageDialog(null, productCart.toArray(), "View Cart", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(null, productCart.toArray(),
+                                "View Cart", JOptionPane.INFORMATION_MESSAGE);
                         productCart.clear();
                     }
                 }
             }
             oos.writeObject(null);
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Nothing in carts!", "View Carts", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Nothing in carts!",
+                    "View Carts", JOptionPane.ERROR_MESSAGE);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
         if (numItems == 0) {
-            JOptionPane.showMessageDialog(null, "Nothing in carts!", "View Carts", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Nothing in carts!",
+                    "View Carts", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -512,7 +542,8 @@ public class Sellers extends User {
                 }
             }
             yourSales.add(count + "," + productList.get(i).getName());
-            JOptionPane.showMessageDialog(null, String.format("You have sold %d of product %s\n", count, productList.get(i).getName()),
+            JOptionPane.showMessageDialog(null, String.format("You have sold %d of product %s\n",
+                            count, productList.get(i).getName()),
                     "Stats", JOptionPane.INFORMATION_MESSAGE);
             //System.out.printf("You have sold %d of product %s\n", count, productList.get(i).getName());
         }

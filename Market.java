@@ -133,7 +133,7 @@ public class Market {
     /*
      * The main method that starts the entire program.
      * @param args User arguments(useless)
-*/
+     */
     public static void main(String[] args) {
         Market mkt = new Market();
         mkt.fromFile(new File("Listings.txt"));
@@ -146,7 +146,7 @@ public class Market {
         }
         Scanner input = new Scanner(System.in);
         if (false) {
-           // Buyers buyer = new Buyers(user);
+            // Buyers buyer = new Buyers(user);
 
             //buyer.choices(buyer, market, input);
         } else if (user instanceof GUISeller) {

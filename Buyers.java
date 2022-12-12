@@ -68,10 +68,10 @@ public class Buyers extends User {
         }
     }
 
-    public void setupSocket(ObjectInputStream ois, ObjectOutputStream oos) {
-        this.ois = ois;
+    public void setupSocket(ObjectInputStream objectIn, ObjectOutputStream objectOut) {
+        this.ois = objectIn;
         //this.writer = writer;
-        this.oos = oos;
+        this.oos = objectOut;
     }
 
     /**
@@ -141,7 +141,8 @@ public class Buyers extends User {
             }
             ArrayList<String> newAllPurchases = new ArrayList<>();
             for (Product p : cart) {
-                newAllPurchases.add(p.getName() + "," + p.getSeller() + "," + super.getEmail() + "," + p.getPrice() + "\n");
+                newAllPurchases.add(p.getName() + "," + p.getSeller() + ","
+                        + super.getEmail() + "," + p.getPrice() + "\n");
             }
             oos.writeObject((ArrayList<String>) newPurchases);
             oos.writeObject((ArrayList<String>) newAllPurchases);
@@ -183,9 +184,11 @@ public class Buyers extends User {
                 //System.out.println("\t11. Exit the application");
                 do {
                     String[] choices = {"1. View current listings", "2. Search for specific products",
-                            "3. Sort the market based on price/quantity", "4. Purchase items from product page",
+                            "3. Sort the market based on price/quantity",
+                            "4. Purchase items from product page",
                             "5. View purchase history", "6. Checkout", "7. Edit cart",
-                            "8. Export purchase history", "9. View statistics", "10. Delete account",
+                            "8. Export purchase history", "9. View statistics",
+                            "10. Delete account",
                             "11. Exit the application"};
                     try {
                         String answer = (String) (JOptionPane.showInputDialog(null, "Buyer Options",
@@ -213,16 +216,19 @@ public class Buyers extends User {
                             //System.out.println("Seller Name: " + p.getSeller());
                             //System.out.println(p.getListing());
                             //System.out.println();
-                            String s = String.format("Name: %s | Description: %s | Quantity: %d | Price: %.2f",
+                            String s = String.format("Name: %s | Description: %s | " +
+                                            "Quantity: %d | Price: %.2f",
                                     p.getName(), p.getDesc(), p.getQuantity(), p.getPrice());
                             products[counter] = s;
                             counter++;
                         }
-                        JOptionPane.showMessageDialog(null, products, "View Products", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(null, products,
+                                "View Products", JOptionPane.INFORMATION_MESSAGE);
 
                         //System.out.println("Would you like to see a specific product? (y/n)");
                         String[] iORe = new String[]{"Yes", "No"};
-                        String ans = (String) JOptionPane.showInputDialog(null, "Would you like to see a specific product? (y/n)",
+                        String ans = (String) JOptionPane.showInputDialog(null,
+                                "Would you like to see a specific product? (y/n)",
                                 "Search Product", JOptionPane.QUESTION_MESSAGE,
                                 null, iORe, iORe[0]);
 
@@ -354,7 +360,8 @@ public class Buyers extends User {
                             products2[counter2] = s;
                             counter2++;
                         }
-                        JOptionPane.showMessageDialog(null, products2, "Sort Market", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(null, products2,
+                                "Sort Market", JOptionPane.INFORMATION_MESSAGE);
                         break;
                     case 4: // Purchase items from product page
                         if (allProducts.size() == 0) {
@@ -591,7 +598,8 @@ public class Buyers extends User {
                         break;
                 }
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Error, exiting the program...", "Do not exit", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null,
+                        "Error, exiting the program...", "Do not exit", JOptionPane.ERROR_MESSAGE);
 
                 saveCart();
                 try {
@@ -610,7 +618,8 @@ public class Buyers extends User {
      * This method exports purchase history to a given file.
      */
     private void export() {
-        JOptionPane.showMessageDialog(null, "Your purchase history has been exported to the file " + super.getEmail() + ".txt",
+        JOptionPane.showMessageDialog(null,
+                "Your purchase history has been exported to the file " + super.getEmail() + ".txt",
                 "Exported!", JOptionPane.INFORMATION_MESSAGE);
         //System.out.println("Your purchase history has been exported to the file " + super.getEmail() + ".txt");
 
@@ -623,16 +632,16 @@ public class Buyers extends User {
      * @return The market
      */
     public ArrayList<Product> getAllProducts(ArrayList<Store> market) {
-        ArrayList<Product> allProducts = new ArrayList<>();
+        ArrayList<Product> allProductss = new ArrayList<>();
         for (Store store : market) {
             if (!store.isEmpty()) {
                 ArrayList<Product> p = store.getProducts();
                 for (Product product : p) {
-                    allProducts.add(product);
+                    allProductss.add(product);
                 }
             }
         }
-        return allProducts;
+        return allProductss;
     }
 
     /**

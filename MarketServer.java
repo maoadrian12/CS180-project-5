@@ -4,6 +4,11 @@ import java.sql.Array;
 import java.sql.SQLOutput;
 import java.util.*;
 
+/**
+ * @author Adrian Mao, Raunak Chakrabauty, Alvin Lee, Brennan Johnson, Vinathi Muthyala
+ * @version 1
+ */
+
 public class MarketServer implements Runnable {
     Socket socket;
     ObjectInputStream reader;

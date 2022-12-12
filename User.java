@@ -53,7 +53,8 @@ public class User {
         return allUsers;
     }
 
-    public static void loadUsers(ObjectInputStream ois, ObjectOutputStream oos) throws IOException, ClassNotFoundException {
+    public static void loadUsers(ObjectInputStream ois, ObjectOutputStream oos)
+            throws IOException, ClassNotFoundException {
         oos.writeObject("uLoad");
         ArrayList<String> users = (ArrayList<String>) ois.readObject();
         for (String s : users) {
@@ -84,10 +85,13 @@ public class User {
         do {
             try {
                 String[] options = {"Log In", "Sign Up"};
-                choice = 1 + JOptionPane.showOptionDialog(null, "Welcome to the Online Car Marketplace!", "Welcome",
+                choice = 1 + JOptionPane.showOptionDialog(null,
+                        "Welcome to the Online Car Marketplace!", "Welcome",
                         JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
                         null, options, options[1]);
-                //choice = Integer.parseInt(JOptionPane.showInputDialog(null, "Welcome to the Online Car Marketplace!\n1. Log In\n2. Sign Up", "Welcome", JOptionPane.QUESTION_MESSAGE));
+                //choice = Integer.parseInt(JOptionPane.showInputDialog(null,
+                // "Welcome to the Online Car Marketplace!\n1. Log In\n2. Sign Up",
+                // "Welcome", JOptionPane.QUESTION_MESSAGE));
             } catch (InputMismatchException e) {
                 choice = -1;
             }
@@ -96,7 +100,8 @@ public class User {
             } else if (choice == 2) {
                 return signUp(ois, oos);
             } else {
-                JOptionPane.showMessageDialog(null, "Invalid Answer", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Invalid Answer", "Error",
+                        JOptionPane.ERROR_MESSAGE);
             }
         } while (choice != 1 && choice != 2);
         return new User();
@@ -116,25 +121,29 @@ public class User {
                 existingUser = false;
                 incorrectPassword = false;
 
-                loginEmail = JOptionPane.showInputDialog(null, "Email:", "Log In", JOptionPane.INFORMATION_MESSAGE);
+                loginEmail = JOptionPane.showInputDialog(null, "Email:", "Log In",
+                        JOptionPane.INFORMATION_MESSAGE);
 
                 for (String userString : allUsers) {
                     String[] userArr = userString.split(",");
 
                     if (loginEmail.equals(userArr[0])) {
-                        loginPassword = JOptionPane.showInputDialog(null, "Password:", "Log In", JOptionPane.INFORMATION_MESSAGE);
+                        loginPassword = JOptionPane.showInputDialog(null, "Password:", "Log In",
+                                JOptionPane.INFORMATION_MESSAGE);
                         if (loginPassword.equals(userArr[1])) {
                             existingUser = true;
                             buyerOrSeller = userArr[2];
                         } else {
                             incorrectPassword = true;
-                            JOptionPane.showMessageDialog(null, "Incorrect Password!", "Log In", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(null, "Incorrect Password!", "Log In",
+                                    JOptionPane.ERROR_MESSAGE);
                         }
                     }
                 }
 
                 if (!existingUser && !incorrectPassword) {
-                    JOptionPane.showMessageDialog(null, "No User Exists With That Email", "Log In", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "No User Exists With That Email",
+                            "Log In", JOptionPane.ERROR_MESSAGE);
                 }
 
             /*if (!existingUser) {
@@ -175,18 +184,21 @@ public class User {
         String attemptedEmail = "";
         do {
             do {
-                attemptedEmail = JOptionPane.showInputDialog(null, "Email:", "Sign Up", JOptionPane.INFORMATION_MESSAGE);
+                attemptedEmail = JOptionPane.showInputDialog(null, "Email:",
+                        "Sign Up", JOptionPane.INFORMATION_MESSAGE);
                 try {
                     if (attemptedEmail.isBlank() || attemptedEmail.isEmpty()) {
                         JOptionPane.showMessageDialog(null, "Please enter an email", "Error",
                                 JOptionPane.ERROR_MESSAGE);
                     }
                     if (attemptedEmail.contains(",")) {
-                        JOptionPane.showMessageDialog(null, "Username cannot contain comma", "Error",
+                        JOptionPane.showMessageDialog(null,
+                                "Username cannot contain comma", "Error",
                                 JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (Exception e) {
-                    JOptionPane.showMessageDialog(null, "Component exited, quitting program.", "Error",
+                    JOptionPane.showMessageDialog(null,
+                            "Component exited, quitting program.", "Error",
                             JOptionPane.ERROR_MESSAGE);
                     System.exit(0);
                 }
@@ -205,7 +217,8 @@ public class User {
         String attemptedPassword;
 
         do {
-            attemptedPassword = JOptionPane.showInputDialog(null, "Password:", "Sign Up", JOptionPane.INFORMATION_MESSAGE);
+            attemptedPassword = JOptionPane.showInputDialog(null, "Password:",
+                    "Sign Up", JOptionPane.INFORMATION_MESSAGE);
 
             if (attemptedPassword.length() == 0) {
                 JOptionPane.showMessageDialog(null, "Please enter a password", "Error",
@@ -222,7 +235,9 @@ public class User {
         String buyerOrSeller = "";
         do {
             String[] options = {"Buyer", "Seller"};
-            buyerOrSellerNum = JOptionPane.showOptionDialog(null, "Buyer or Seller?:", "Sign Up", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+            buyerOrSellerNum = JOptionPane.showOptionDialog(null, "Buyer or Seller?:",
+                    "Sign Up", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
+                    null, options, options[0]);
 
             if (buyerOrSellerNum == 0)
                 buyerOrSeller = "buyer";
@@ -232,7 +247,8 @@ public class User {
 
         } while (!(buyerOrSeller.equals("buyer")) && !(buyerOrSeller.equals("seller")));
         ArrayList<String> thisShouldNotBeAnArrayList = new ArrayList<>();
-        thisShouldNotBeAnArrayList.add(String.format("%s,%s,%s", attemptedEmail, attemptedPassword, buyerOrSeller));
+        thisShouldNotBeAnArrayList.add(String.format("%s,%s,%s", attemptedEmail, attemptedPassword,
+                buyerOrSeller));
         try {
             oos.writeObject("uSignup");
             oos.writeObject(thisShouldNotBeAnArrayList);
@@ -270,8 +286,9 @@ public class User {
                 String s = accounts.get(i);
                 if (s.substring(0, s.indexOf(',')).equals(getEmail())) {
                     accounts.remove(i);
-                    JOptionPane.showMessageDialog(null, "Account deleted, terminating program...", "Account",
-                    JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null,
+                            "Account deleted, terminating program...", "Account",
+                            JOptionPane.INFORMATION_MESSAGE);
                 }
             }
             for (String account : accounts) {
@@ -280,7 +297,8 @@ public class User {
             oos.writeObject(null);
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error deleting account, try closing and rerunning the program.", "Error",
+            JOptionPane.showMessageDialog(null,
+                    "Error deleting account, try closing and rerunning the program.", "Error",
                     JOptionPane.ERROR_MESSAGE);
         }
         /*File f = new File("UserAccounts.txt");

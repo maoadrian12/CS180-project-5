@@ -1,5 +1,0 @@
-produc,seller,2,5,2.00
-produc,seller,2,5,2.00
-produc,seller,2,5,2.00
-produc,seller,2,5,2.00
-produc,seller,2,5,2.00
