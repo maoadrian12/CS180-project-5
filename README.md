@@ -17,11 +17,11 @@ Made by CS 180 Lab L05 Group 3 Brennan Johnson, Adrian Mao, Alvin Lee, Raunak Ch
 
 ## Installation
 
-Copy the classes into an IDE of your choosing. After compiling the classes, run the Market class to run the program.
+Copy the classes into an IDE of your choosing. After compiling the classes, run the MarketServer class, then run the MarketClient class, and enter 1234 for port number and "localhost" for host.
 
 ## MarketServer.java
 
-The MarketServer class is the class that holds the server for the program. This class is to be ran in the terminal first before the client class is ran. This class holds methods related to managing connections to the client as well as some threading. 
+The MarketServer class is the class that holds the server for the program. This class is to be ran in the terminal first before the client class is ran. This class holds methods related to managing connections to the client as well as some threading. All data processing is done in this class.
 
 ## MarketClient.java
 
@@ -35,7 +35,7 @@ Testing Info: Non integer input for first choice, non 1 or 2 input for first cho
 
 ## Buyers.java
 
-The Buyers class is the class that contains all the methods and processing related to a customer using the program. It includes the methods that add to the files, make the purchases, shopping cart, and manages control flow of the marketplace when a customer is logged in using the program. This class is a subclass of the User class.
+The Buyers class is the class that contains all the methods and processing related to a customer using the program. It includes the methods that add to the files, make the purchases, shopping cart, and manages control flow of the marketplace when a customer is logged in using the program. This class is a subclass of the User class. NOTE: Option #4, which says "Purchase items from product page", only adds the products into a shopping cart. To actually purchase the items, select "Checkout." 
 
 Testing Info: Non-integer inputs for choice prompt, invalid/negative integer inputs for first prompt. In the first five prompts, tested with and without the prescence of Listings.txt. When checking out and editing carts, tested with and without anything in cart. When viewing statistics or viewing purchase history, tested with and without any purchase history. 
 Tested incorrect inputs for viewing listings. Tested searching for products when there was nothing, or when Listings.txt is gone. Tested error input handling when incorrect input was put for sorting. When purchasing, tested with nothing in Listings, or when no name was found for the file. When viewing purchase history, tested with and without anything bought.
@@ -61,6 +61,8 @@ Main testing was in printing the store to a file: ensuring input/output was corr
 
 ## Submissions
 
-Submitted report to Brightspace: Brennan Johnson
+Submitted report to Brightspace: Alvin Lee
 
 Submitted Vocareum Workspace: Adrian Mao
+
+Submitted video presentation to Brightspace: Adrian Mao
