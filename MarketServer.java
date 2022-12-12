@@ -39,7 +39,7 @@ public class MarketServer implements Runnable {
                         oos.writeObject(getList("UserAccounts.txt"));
                         ArrayList<String> accounts = new ArrayList<>();
                         while (true) {
-                            String accountString = (String) reader.readObject();
+                            String accountString = (String) reader.readObject() + "\n";
                             if (accountString == null)
                                 break;
                             accounts.add(accountString);

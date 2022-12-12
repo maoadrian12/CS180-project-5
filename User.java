@@ -270,12 +270,12 @@ public class User {
                 String s = accounts.get(i);
                 if (s.substring(0, s.indexOf(',')).equals(getEmail())) {
                     accounts.remove(i);
+                    JOptionPane.showMessageDialog(null, "Account deleted, terminating program...", "Account",
+                    JOptionPane.INFORMATION_MESSAGE);
                 }
             }
             for (String account : accounts) {
                 oos.writeObject(account);
-                JOptionPane.showMessageDialog(null, "Account deleted, terminating program...", "Account",
-                        JOptionPane.INFORMATION_MESSAGE);
             }
             oos.writeObject(null);
         } catch (IOException | ClassNotFoundException e) {
