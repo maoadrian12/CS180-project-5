@@ -35,7 +35,7 @@ Testing Info: Non integer input for first choice, non 1 or 2 input for first cho
 
 ## Buyers.java
 
-The Buyers class is the class that contains all the methods and processing related to a customer using the program. It includes the methods that add to the files, make the purchases, shopping cart, and manages control flow of the marketplace when a customer is logged in using the program. This class is a subclass of the User class.
+The Buyers class is the class that contains all the methods and processing related to a customer using the program. It includes the methods that add to the files, make the purchases, shopping cart, and manages control flow of the marketplace when a customer is logged in using the program. This class is a subclass of the User class. NOTE: Option #4, which says "Purchase items from product page", only adds the products into a shopping cart. To actually purchase the items, select "Checkout." 
 
 Testing Info: Non-integer inputs for choice prompt, invalid/negative integer inputs for first prompt. In the first five prompts, tested with and without the prescence of Listings.txt. When checking out and editing carts, tested with and without anything in cart. When viewing statistics or viewing purchase history, tested with and without any purchase history. 
 Tested incorrect inputs for viewing listings. Tested searching for products when there was nothing, or when Listings.txt is gone. Tested error input handling when incorrect input was put for sorting. When purchasing, tested with nothing in Listings, or when no name was found for the file. When viewing purchase history, tested with and without anything bought.
