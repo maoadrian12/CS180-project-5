@@ -21,7 +21,7 @@ Copy the classes into an IDE of your choosing. After compiling the classes, run 
 
 ## MarketServer.java
 
-The MarketServer class is the class that holds the server for the program. This class is to be ran in the terminal first before the client class is ran. This class holds methods related to managing connections to the client as well as some threading. 
+The MarketServer class is the class that holds the server for the program. This class is to be ran in the terminal first before the client class is ran. This class holds methods related to managing connections to the client as well as some threading. All data processing is done in this class.
 
 ## MarketClient.java
 
