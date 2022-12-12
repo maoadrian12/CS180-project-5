@@ -18,22 +18,23 @@ public class Market {
     public static void toFile(File f, ArrayList<Store> m) {
         //THIS ONE'S OKAY
         try {
-            PrintWriter pw = new PrintWriter(f);
+            FileWriter fw = new FileWriter(f, false);
             for (int i = 0; i < m.size(); i++) {
-                pw.write(m.get(i).toString());
-                pw.println();
+                fw.write(m.get(i).toString());
             }
-            pw.close();
+            fw.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void setMarket(ArrayList<Store> market2) {
-        market.clear();
-        for (Store s : market2) {
+        market = market2;
+        /*for (Store s : market2) {
             market.add(s);
+            System.out.println("Added!");
         }
+        market.size();*/
     }
 
     /**

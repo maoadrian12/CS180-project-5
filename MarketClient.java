@@ -45,6 +45,5 @@ public class MarketClient {
             seller.setupSocket(ois, oos);
             seller.choices(seller, market, input);
         }
-        Market.updateListings();
     }
 }

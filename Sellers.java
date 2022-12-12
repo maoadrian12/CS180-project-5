@@ -429,7 +429,8 @@ public class Sellers extends User {
                     oos.writeObject(name + "Cart.txt");
                     ArrayList<String> carts = (ArrayList<String>) ois.readObject();
                     if (carts.size() > 0) {
-                        System.out.println("Customer " + name + " has: ");
+                        JOptionPane.showMessageDialog(null, "Customer " + name + " has: ",
+                                "Info", JOptionPane.INFORMATION_MESSAGE);
                         for (String str : carts) {
                             Product p = new Product(str);
                             numItems++;
@@ -503,25 +504,32 @@ public class Sellers extends User {
                 }
             }
             yourSales.add(count + "," + productList.get(i).getName());
-            System.out.printf("You have sold %d of product %s\n", count, productList.get(i).getName());
+            JOptionPane.showMessageDialog(null, String.format("You have sold %d of product %s\n", count, productList.get(i).getName()),
+                    "Stats", JOptionPane.INFORMATION_MESSAGE);
+            //System.out.printf("You have sold %d of product %s\n", count, productList.get(i).getName());
         }
 
-        System.out.println("Would you like to sort?(y/n)");
-        String answer = input.nextLine();
+        String answer = JOptionPane.showInputDialog(null, "Would you like to sort?(y/n)", "Sort?",
+                JOptionPane.QUESTION_MESSAGE);
         if (answer.equalsIgnoreCase("y")) {
             Collections.sort(allPurchases, reverseOrder());
             Collections.sort(yourSales, reverseOrder());
+            ArrayList<String> purchase = new ArrayList<String>();
             for (String str : allPurchases) {
                 String numBought = str.substring(0, str.indexOf(','));
                 String buyer = str.substring(str.indexOf(',') + 1);
+                purchase.add(String.format("Buyer %s has bought %s products\n", buyer, numBought));
                 System.out.printf("Buyer %s has bought %s products\n", buyer, numBought);
             }
-            System.out.println("-----------------------");
+            JOptionPane.showMessageDialog(null, purchase, "Stats", JOptionPane.INFORMATION_MESSAGE);
+            ArrayList<String> yourPurchase = new ArrayList<>();
             for (String string : yourSales) {
                 String numBought = string.substring(0, string.indexOf(','));
                 String productName = string.substring(string.indexOf(',') + 1);
-                System.out.printf("You have sold %s of product %s\n", numBought, productName);
+                yourPurchase.add(String.format("You have sold %s of product %s\n", numBought, productName));
+                //System.out.printf("You have sold %s of product %s\n", numBought, productName);
             }
+            JOptionPane.showMessageDialog(null, yourPurchase, "Stats", JOptionPane.INFORMATION_MESSAGE);
         }
 
         /*File f = new File("AllPurchases.txt");
@@ -668,8 +676,9 @@ public class Sellers extends User {
      * @param input The scanner that takes user input.
      */
     public void im(Scanner input) {
-        System.out.println("What path do you want to import from?");
-        String answer = input.nextLine();
+
+        String answer = JOptionPane.showInputDialog(null, "What path do you want to import from?",
+                "Where?", JOptionPane.QUESTION_MESSAGE);
         ArrayList<String> products = null;
         try {
             oos.writeObject("sImport");
@@ -682,14 +691,16 @@ public class Sellers extends User {
         }
         //File f = new File(answer);
         if (products.isEmpty()) {
-            System.out.println("Error importing from file, aborting...");
+            JOptionPane.showMessageDialog(null, "Error importing from file, aborting...", "Error",
+                    JOptionPane.ERROR_MESSAGE);
         } else {
             for (String s : products) {
                 Product p = new Product(s);
                 if (p.getSeller().equals(super.getEmail())) {
                     addProduct(p);
                 } else {
-                    System.out.println("Please have your own products.");
+                    JOptionPane.showMessageDialog(null, "Please import your own products", "Error",
+                            JOptionPane.ERROR_MESSAGE);
                 }
             }
             /*

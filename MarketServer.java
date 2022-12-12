@@ -33,16 +33,17 @@ public class MarketServer implements Runnable {
                         break;
                     case "uSignup":
                         ArrayList<String> userList = (ArrayList<String>) reader.readObject();
+                        userList.add("\n");
                         writeAndAppend(userList, "UserAccounts.txt");
                         break;
                     case "uDelete":
                         oos.writeObject(getList("UserAccounts.txt"));
                         ArrayList<String> accounts = new ArrayList<>();
                         while (true) {
-                            String accountString = (String) reader.readObject() + "\n";
+                            String accountString = (String) reader.readObject();
                             if (accountString == null)
                                 break;
-                            accounts.add(accountString);
+                            accounts.add(accountString + "\n");
                         }
                         writeToFile(accounts, "UserAccounts.txt");
                         break;
@@ -89,6 +90,7 @@ public class MarketServer implements Runnable {
                         }
                         mkt.setMarket(m);
                         mkt.toFile();
+                        Market.updateListings();
                         break;
                     case "bHistory":
                         String history = (String) reader.readObject();
