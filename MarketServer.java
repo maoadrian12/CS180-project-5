@@ -131,7 +131,8 @@ public class MarketServer implements Runnable {
                         }
                         break;
                     case "sImport":
-                        oos.writeObject(getList((String) reader.readObject()));
+                        String importName = String.format("%s", reader.readObject());
+                        oos.writeObject(getList(importName));
                         break;
                     case "sExport":
                         String nameOfFile = (String) reader.readObject();

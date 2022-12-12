@@ -445,6 +445,7 @@ public class Sellers extends User {
                             productCart.add(desc);
                         }
                         JOptionPane.showMessageDialog(null, productCart.toArray(), "View Cart", JOptionPane.INFORMATION_MESSAGE);
+                        productCart.clear();
                     }
                 }
             }

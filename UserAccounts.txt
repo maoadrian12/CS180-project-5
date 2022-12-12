@@ -1,6 +1,2 @@
 seller,seller,seller
-buyer2,buyer2,buyer
-buyer3,buyer3,buyer
-buyer32,buyer32,buyer
-buyer,buyer,buyer
-new buyer,this password,buyer
+buyer1,buyer1,buyer

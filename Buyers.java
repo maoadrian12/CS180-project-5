@@ -522,17 +522,17 @@ public class Buyers extends User {
                                             "Which item would you like to remove? Enter a number.", "Edit Cart",
                                             JOptionPane.INFORMATION_MESSAGE);
                                     int num = Integer.parseInt(number);
-                                    String output = "Removed " + shoppingCart.get(count).getName();
+                                    String output = "Removed " + shoppingCart.get(num).getName();
                                     JOptionPane.showMessageDialog(null, output,
                                             "Edit Cart", JOptionPane.INFORMATION_MESSAGE);
-                                    shoppingCart.get(count).increaseQuantity();
-                                    shoppingCart.remove(count);
+                                    shoppingCart.get(num).increaseQuantity();
+                                    shoppingCart.remove(num);
                                     saveCart();
-
                                     loop = true;
                                 } catch (Exception e) {
                                     JOptionPane.showMessageDialog(null, "Please enter a valid integer.",
                                             "Edit Cart", JOptionPane.ERROR_MESSAGE);
+                                    e.printStackTrace();
                                     loop = false;
                                 }
                             } while (loop == false);
