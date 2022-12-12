@@ -64,3 +64,5 @@ Main testing was in printing the store to a file: ensuring input/output was corr
 Submitted report to Brightspace: Alvin Lee
 
 Submitted Vocareum Workspace: Adrian Mao
+
+Submitted video presentation to Brightspace: Adrian Mao
