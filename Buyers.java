@@ -582,7 +582,9 @@ public class Buyers extends User {
                     }
                     break;
                 default:
-                    System.out.println("Enter Valid Number");
+                    JOptionPane.showMessageDialog(null, "Enter Valid Number", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    //System.out.println("Enter Valid Number");
                     break;
             }
         } while (choice != 11);
@@ -592,7 +594,9 @@ public class Buyers extends User {
      * This method exports purchase history to a given file.
      */
     private void export() {
-        System.out.println("Your purchase history has been exported to the file " + super.getEmail() + ".txt");
+        JOptionPane.showMessageDialog(null, "Your purchase history has been exported to the file " + super.getEmail() + ".txt",
+                "Exported!", JOptionPane.INFORMATION_MESSAGE);
+        //System.out.println("Your purchase history has been exported to the file " + super.getEmail() + ".txt");
 
     }
 
@@ -642,6 +646,7 @@ public class Buyers extends User {
                 sellers.add(sellerName);
             }
         }
+        ArrayList<String> sellerPurchases = new ArrayList<>();
         for (String s : sellers) {
             int count = 0;
             for (String str : purchases) {
@@ -653,9 +658,11 @@ public class Buyers extends User {
             }
 
             allPurchases.add(count + "," + s);
-            System.out.printf("Seller %s has sold %d products\n", s, count);
-
+            sellerPurchases.add(String.format("Seller %s has sold %d products\n", s, count));
+            //System.out.printf("Seller %s has sold %d products\n", s, count);
         }
+        JOptionPane.showMessageDialog(null, sellerPurchases, "Purchases", JOptionPane.INFORMATION_MESSAGE);
+        ArrayList<String> yourPurchaseHistory = new ArrayList<>();
         for (String s : sellers) {
             int count = 0;
             for (String str : purchases) {
@@ -668,25 +675,33 @@ public class Buyers extends User {
                 }
             }
             yourPurchases.add(count + "," + s);
-            System.out.printf("You have bought %d products from %s\n", count, s);
+            yourPurchaseHistory.add(String.format("You have bought %d products from %s\n", count, s));
+            //System.out.printf("You have bought %d products from %s\n", count, s);
         }
-
-        System.out.println("Would you like to sort?(y/n)");
-        String answer = input.nextLine();
+        JOptionPane.showMessageDialog(null, yourPurchaseHistory, "Purchases", JOptionPane.INFORMATION_MESSAGE);
+        //System.out.println("Would you like to sort?(y/n)");
+        String answer = JOptionPane.showInputDialog(null, "Would you like to sort?(y/n)",
+                "Sort?", JOptionPane.QUESTION_MESSAGE);
         if (answer.equalsIgnoreCase("y")) {
             Collections.sort(allPurchases, reverseOrder());
             Collections.sort(yourPurchases, reverseOrder());
+            ArrayList<String> sellerStuff = new ArrayList<>();
             for (String str : allPurchases) {
                 String numBought = str.substring(0, str.indexOf(','));
                 String seller = str.substring(str.indexOf(',') + 1);
-                System.out.printf("Seller %s has sold %s products\n", seller, numBought);
+                sellerStuff.add(String.format("Seller %s has sold %s products\n", seller, numBought));
+                //System.out.printf("Seller %s has sold %s products\n", seller, numBought);
             }
-            System.out.println("-----------------------");
+            JOptionPane.showMessageDialog(null, sellerStuff, "Seller history", JOptionPane.INFORMATION_MESSAGE);
+            //System.out.println("-----------------------");
+            ArrayList<String> boughtStuff = new ArrayList<>();
             for (String string : yourPurchases) {
                 String numBought = string.substring(0, string.indexOf(','));
                 String seller = string.substring(string.indexOf(',') + 1);
-                System.out.printf("You have bought %s products from %s\n", numBought, seller);
+                boughtStuff.add(String.format("You have bought %s products from %s\n", numBought, seller));
+                //System.out.printf("You have bought %s products from %s\n", numBought, seller);
             }
+            JOptionPane.showMessageDialog(null, boughtStuff, "history", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
