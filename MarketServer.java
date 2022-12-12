@@ -19,7 +19,7 @@ public class MarketServer implements Runnable {
 
     }
     public void run() {
-        System.out.printf("Connection received from %s\n", socket);
+        //System.out.printf("Connection received from %s\n", socket);
         try {
             File f = new File("Listings.txt");
             Market mkt = new Market();
@@ -80,13 +80,10 @@ public class MarketServer implements Runnable {
                             for (Product product : store.getProducts()) {
                                 if (product.getName().equals(buyProduct.getName())
                                         && product.getSeller().equals(buyProduct.getSeller())) {
-                                    System.out.println("found!");
+                                    //System.out.println("found!");
                                     product.decreaseQuantity();
                                 }
                             }
-                        }
-                        for (Store testStore : m) {
-                            System.out.println(testStore);
                         }
                         mkt.setMarket(m);
                         mkt.toFile();
@@ -146,18 +143,18 @@ public class MarketServer implements Runnable {
                         break;
                     case "sPrint":
                         String sellerName = (String) reader.readObject();
-                        System.out.println(sellerName);
+                        //System.out.println(sellerName);
                         Store seller = new Store(sellerName);
                         while (true) {
                             String productString = (String) reader.readObject();
                             if (productString == null)
                                 break;
-                            System.out.println(productString);
+                            //System.out.println(productString);
                             seller.addProduct(new Product(productString));
                         }
                         ArrayList<Product> productss = seller.getProducts();
                         for (Product p : productss) {
-                            System.out.println(p.toString());
+                            //System.out.println(p.toString());
                         }
                         seller.printToFile(new File(sellerName + ".txt"));
                         break;
@@ -165,12 +162,12 @@ public class MarketServer implements Runnable {
                         Market.updateListings();
                         break;
                     default:
-                        System.out.println("Error with that input");
+                        //System.out.println("Error with that input");
                         break;
                 }
             }
         } catch (SocketException e) {
-            System.out.println("Socket " + socket + " has disconnected.");
+            //System.out.println("Socket " + socket + " has disconnected.");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -190,7 +187,7 @@ public class MarketServer implements Runnable {
                 list.add(s);
             }
         } catch (IOException e) {
-            System.out.println("Error reading to file " + name);
+            //System.out.println("Error reading to file " + name);
         }
         return list;
     }
@@ -210,7 +207,7 @@ public class MarketServer implements Runnable {
             fw.close();
             return true;
         } catch (IOException e) {
-            System.out.println("Error writing to file");
+            //System.out.println("Error writing to file");
             e.printStackTrace();
             return false;
         }
@@ -230,7 +227,7 @@ public class MarketServer implements Runnable {
             }
             fw.close();
         } catch (IOException e) {
-            System.out.println("Error writing to file");
+            //System.out.println("Error writing to file");
             throw new IOException();
         }
     }
