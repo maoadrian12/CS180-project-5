@@ -174,7 +174,7 @@ public class MarketServer implements Runnable {
         } catch (SocketException e) {
             //System.out.println("Socket " + socket + " has disconnected.");
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
     }
@@ -213,7 +213,7 @@ public class MarketServer implements Runnable {
             return true;
         } catch (IOException e) {
             //System.out.println("Error writing to file");
-            e.printStackTrace();
+            //e.printStackTrace();
             return false;
         }
     }

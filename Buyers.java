@@ -602,7 +602,7 @@ public class Buyers extends User {
                 }
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null,
-                        "Error, exiting the program...", "Do not exit", JOptionPane.ERROR_MESSAGE);
+                        "Exiting the program...", "Do not exit", JOptionPane.ERROR_MESSAGE);
 
                 saveCart();
                 try {
