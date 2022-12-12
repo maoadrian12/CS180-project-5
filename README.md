@@ -1,6 +1,6 @@
 # Online Car Marketplace
 
-This project utilizes multiple classes, packages, and methods to create a terminal based car marketplace.
+This project utilizes multiple classes, packages, and methods to create a GUI based car marketplace.
 
 Made by CS 180 Lab L05 Group 3 Brennan Johnson, Adrian Mao, Alvin Lee, Raunak Chakrabarty, and Vinathi Muthyala
 
@@ -9,9 +9,10 @@ Made by CS 180 Lab L05 Group 3 Brennan Johnson, Adrian Mao, Alvin Lee, Raunak Ch
 - Users are prompted to login or make an account, either as a customer or a seller.
 - Customers are able to view cars on the market, search for specific ones, Sort the options by price and/or quantity, purchase vehicles, view purchase history, export purchases, and manage their shopping cart.
 - Sellers are able to create/edit/delete their own cars on the market, view their sales statistics, view shopping carts that contain their products, and import/export product info.
-- All the information of the marketplace and the transaction history is located on specified file thart are easily accessable.
+- All the information of the marketplace and the transaction history are located on specified files that are easily accessable.
 - Multiple Stores are in the database with different products in each one.
 - The program uses an organized menu function with clear instructions for each of the listed features.
+- The program is fully GUI based along with having a server/client system and working concurrency features.
 
 
 ## Installation
