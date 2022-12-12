@@ -143,7 +143,6 @@ public class MarketServer implements Runnable {
                         break;
                     case "sPrint":
                         String sellerName = (String) reader.readObject();
-                        //System.out.println(sellerName);
                         Store seller = new Store(sellerName);
                         while (true) {
                             String productString = (String) reader.readObject();
