@@ -8,7 +8,7 @@ import java.util.*;
  * @version 11.13.22
  */
 public class Market {
-    private static ArrayList<Store> market = new ArrayList<Store>();
+    private ArrayList<Store> market = new ArrayList<Store>();
 
     /**
      * This method prints the given market to a file.
@@ -133,7 +133,6 @@ public class Market {
     /*
      * The main method that starts the entire program.
      * @param args User arguments(useless)
-     */
     public static void main(String[] args) {
         Market mkt = new Market();
         mkt.fromFile(new File("Listings.txt"));
@@ -156,5 +155,6 @@ public class Market {
         }
         updateListings();
     }
+     */
 
 }

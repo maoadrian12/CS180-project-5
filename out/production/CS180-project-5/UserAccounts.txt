@@ -1,2 +1,2 @@
 seller,seller,seller
-buyer1,buyer1,buyer
+buyer,buyer,buyer

@@ -1,6 +1,6 @@
 # Online Car Marketplace
 
-This project utilizes multiple classes, packages, and methods to create a terminal based car marketplace.
+This project utilizes multiple classes, packages, and methods to create a GUI based car marketplace.
 
 Made by CS 180 Lab L05 Group 3 Brennan Johnson, Adrian Mao, Alvin Lee, Raunak Chakrabarty, and Vinathi Muthyala
 
@@ -9,20 +9,23 @@ Made by CS 180 Lab L05 Group 3 Brennan Johnson, Adrian Mao, Alvin Lee, Raunak Ch
 - Users are prompted to login or make an account, either as a customer or a seller.
 - Customers are able to view cars on the market, search for specific ones, Sort the options by price and/or quantity, purchase vehicles, view purchase history, export purchases, and manage their shopping cart.
 - Sellers are able to create/edit/delete their own cars on the market, view their sales statistics, view shopping carts that contain their products, and import/export product info.
-- All the information of the marketplace and the transaction history is located on specified file thart are easily accessable.
+- All the information of the marketplace and the transaction history are located on specified files that are easily accessable.
 - Multiple Stores are in the database with different products in each one.
 - The program uses an organized menu function with clear instructions for each of the listed features.
+- The program is fully GUI based along with having a server/client system and working concurrency features.
 
 
 ## Installation
 
-Copy the classes into an IDE of your choosing. After compiling the classes, run the Market class to run the program.
+Copy the classes into an IDE of your choosing. After compiling the classes, run the MarketServer class, then run the MarketClient class, and enter 1234 for port number and "localhost" for host.
 
-## Market.java
+## MarketServer.java
 
-The Market class is the class that contains the main method to the marketplace and runs the program. This is the class to be ran in the terminal to run the program. Some methods pertaining to file I/O not specific to any of the other classes are located here as well. The market class calls a lot of methods written in other classes as well as distributes the processing for said methods elsewhere to keep the main one clean.
+The MarketServer class is the class that holds the server for the program. This class is to be ran in the terminal first before the client class is ran. This class holds methods related to managing connections to the client as well as some threading. All data processing is done in this class.
 
-Testing Info: Listings.txt was present/not present, making sure Listings.txt would have the correct info, making sure Listings.txt would update every time the program closed, etc... Also tested inputs in the login sections: whether people could have blank usernames, and whether incorrect inputs could be handled well.
+## MarketClient.java
+
+The MarketClient class is the class that contains the main method to the marketplace and runs the program. This is the class to be ran in the terminal after running the server class to run the program. Some methods pertaining to file I/O not specific to any of the other classes are located here as well. This class calls a lot of methods written in other classes as well as distributes the processing for said methods elsewhere to keep the main one clean.
 
 ## User.java
 
@@ -32,7 +35,7 @@ Testing Info: Non integer input for first choice, non 1 or 2 input for first cho
 
 ## Buyers.java
 
-The Buyers class is the class that contains all the methods and processing related to a customer using the program. It includes the methods that add to the files, make the purchases, shopping cart, and manages control flow of the marketplace when a customer is logged in using the program. This class is a subclass of the User class.
+The Buyers class is the class that contains all the methods and processing related to a customer using the program. It includes the methods that add to the files, make the purchases, shopping cart, and manages control flow of the marketplace when a customer is logged in using the program. This class is a subclass of the User class. NOTE: Option #4, which says "Purchase items from product page", only adds the products into a shopping cart. To actually purchase the items, select "Checkout." 
 
 Testing Info: Non-integer inputs for choice prompt, invalid/negative integer inputs for first prompt. In the first five prompts, tested with and without the prescence of Listings.txt. When checking out and editing carts, tested with and without anything in cart. When viewing statistics or viewing purchase history, tested with and without any purchase history. 
 Tested incorrect inputs for viewing listings. Tested searching for products when there was nothing, or when Listings.txt is gone. Tested error input handling when incorrect input was put for sorting. When purchasing, tested with nothing in Listings, or when no name was found for the file. When viewing purchase history, tested with and without anything bought.
@@ -58,6 +61,8 @@ Main testing was in printing the store to a file: ensuring input/output was corr
 
 ## Submissions
 
-Submitted report to Brightspace: Brennan Johnson
+Submitted report to Brightspace: Alvin Lee
 
 Submitted Vocareum Workspace: Adrian Mao
+
+Submitted video presentation to Brightspace: Adrian Mao
