@@ -80,13 +80,13 @@ public class MarketServer implements Runnable {
                             for (Product product : store.getProducts()) {
                                 if (product.getName().equals(buyProduct.getName())
                                         && product.getSeller().equals(buyProduct.getSeller())) {
-                                    System.out.println("found!");
+                                    //System.out.println("found!");
                                     product.decreaseQuantity();
                                 }
                             }
                         }
                         for (Store testStore : m) {
-                            System.out.println(testStore);
+                            //System.out.println(testStore);
                         }
                         mkt.setMarket(m);
                         mkt.toFile();
@@ -146,18 +146,18 @@ public class MarketServer implements Runnable {
                         break;
                     case "sPrint":
                         String sellerName = (String) reader.readObject();
-                        System.out.println(sellerName);
+                        //ln(sellerName);
                         Store seller = new Store(sellerName);
                         while (true) {
                             String productString = (String) reader.readObject();
                             if (productString == null)
                                 break;
-                            System.out.println(productString);
+                            //System.out.println(productString);
                             seller.addProduct(new Product(productString));
                         }
                         ArrayList<Product> productss = seller.getProducts();
                         for (Product p : productss) {
-                            System.out.println(p.toString());
+                            //System.out.println(p.toString());
                         }
                         seller.printToFile(new File(sellerName + ".txt"));
                         break;
